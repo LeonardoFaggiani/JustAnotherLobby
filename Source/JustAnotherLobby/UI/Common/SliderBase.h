@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonUserWidget.h"
+#include "UserWidgetBase.h"
 #include "Components/Slider.h"
 #include "CommonTextBlock.h"
 #include "Sound/SoundClass.h"
@@ -15,7 +15,7 @@
  * 
  */
 UCLASS()
-class JUSTANOTHERLOBBY_API USliderBase : public UCommonUserWidget
+class JUSTANOTHERLOBBY_API USliderBase : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

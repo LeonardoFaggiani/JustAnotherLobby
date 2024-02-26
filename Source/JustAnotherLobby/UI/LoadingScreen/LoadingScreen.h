@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonUserWidget.h"
+#include "../Common/UserWidgetBase.h"
 #include "Animation/WidgetAnimation.h"
 
 #include "LoadingScreen.generated.h"
@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class JUSTANOTHERLOBBY_API ULoadingScreen : public UCommonUserWidget
+class JUSTANOTHERLOBBY_API ULoadingScreen : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

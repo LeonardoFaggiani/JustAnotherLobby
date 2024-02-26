@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "CommonButtonBase.h"
+#include "../Common/UserWidgetBase.h"
 #include "MainMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class JUSTANOTHERLOBBY_API UMainMenu : public UCommonUserWidget
+class JUSTANOTHERLOBBY_API UMainMenu : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

@@ -31,7 +31,7 @@ bool UMainMenu::Initialize()
 
 void UMainMenu::NativeDestruct()
 {
-    //TearDown();
+    TearDown();
 
     Super::NativeDestruct();
 }
@@ -58,5 +58,14 @@ void UMainMenu::OnOptionsButtonButtonClicked()
 }
 
 void UMainMenu::OnExitButtonClicked() {
-    //if (MenuInterface != nullptr) MenuInterface->QuitGame();
+
+    UWorld* World = GetWorld();
+
+    if (World == nullptr) return;
+
+    APlayerController* PlayerController = World->GetFirstPlayerController();
+
+    if (PlayerController == nullptr) return;
+
+    PlayerController->ConsoleCommand("quit");
 }

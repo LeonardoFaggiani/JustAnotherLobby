@@ -7,12 +7,23 @@ public class JustAnotherLobby : ModuleRules
 	public JustAnotherLobby(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+
+        PublicDependencyModuleNames.AddRange(new string[] {
+            "Core",
+            "CoreUObject",
+            "Engine",
+            "InputCore",
+            "EnhancedInput",
+            "OnlineSubsystem",
+            "SlateCore",
+            "MoviePlayer"
+        });
 
         PrivateDependencyModuleNames.AddRange(
                 new string[] {
-                "CommonUI"
+                    "UMG",
+                    "Slate",
+                    "CommonUI"
                 });
 
         // Uncomment if you are using Slate UI
