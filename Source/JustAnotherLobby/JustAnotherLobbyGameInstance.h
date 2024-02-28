@@ -121,6 +121,9 @@ public:
     UFUNCTION(BlueprintCallable)
     void SetFirstTimeLoading(bool InbIsFirstTimeLoading);
 
+    UFUNCTION()
+    TSubclassOf<ACharacterBase> GetHeroeByName(FString InHeroeName);
+
     /* End General Settings */    
 
 private:

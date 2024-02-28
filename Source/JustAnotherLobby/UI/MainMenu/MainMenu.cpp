@@ -41,6 +41,8 @@ void UMainMenu::OnHostButtonClicked()
     this->JustAnotherLobbyGameInstance->SetHostGame(true);
     this->JustAnotherLobbyGameInstance->SetFindGames(false);
     this->JustAnotherLobbyGameInstance->SetOptionsMenu(false);
+
+    this->JustAnotherLobbyGameInstance->OpenNextLevel(FName("MainMenuWidgets"), false, false, 0.1f);
 }
 
 void UMainMenu::OnFindGamesButtonClicked()
@@ -48,6 +50,8 @@ void UMainMenu::OnFindGamesButtonClicked()
     this->JustAnotherLobbyGameInstance->SetFindGames(true);
     this->JustAnotherLobbyGameInstance->SetHostGame(false);
     this->JustAnotherLobbyGameInstance->SetOptionsMenu(false);
+
+    this->JustAnotherLobbyGameInstance->OpenNextLevel(FName("MainMenuWidgets"), false, false, 0.1f);
 }
 
 void UMainMenu::OnOptionsButtonButtonClicked()
@@ -55,6 +59,8 @@ void UMainMenu::OnOptionsButtonButtonClicked()
     this->JustAnotherLobbyGameInstance->SetOptionsMenu(true);
     this->JustAnotherLobbyGameInstance->SetHostGame(false);
     this->JustAnotherLobbyGameInstance->SetFindGames(false);
+
+    this->JustAnotherLobbyGameInstance->OpenNextLevel(FName("MainMenuWidgets"), false, false, 0.1f);
 }
 
 void UMainMenu::OnExitButtonClicked() {

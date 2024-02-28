@@ -9,13 +9,12 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "Net/UnrealNetwork.h"
+#include "../UI/Lobby/OverheadPlayerSpot.h"
 
 // Sets default values
 ACharacterBase::ACharacterBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 120.0f);
 
@@ -50,6 +49,8 @@ ACharacterBase::ACharacterBase()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
+	OverheadPlayerSpot = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadPlayerSpot"));
+	OverheadPlayerSpot->SetupAttachment(RootComponent);
 	bReplicates = true;
 
 }
@@ -122,5 +123,62 @@ void ACharacterBase::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ACharacterBase::Multi_SetReadyStatus_Implementation(bool InbIsReady)
+{
+	this->bIsReady = InbIsReady;
+
+	UOverheadPlayerSpot* InOverheadPlayerSpot = Cast<UOverheadPlayerSpot>(this->OverheadPlayerSpot->GetUserWidgetObject());
+
+	if (IsValid(InOverheadPlayerSpot))
+		InOverheadPlayerSpot->UpdateReadyStatus();
+	else {
+
+		FTimerHandle MemberTimerHandle;
+		FTimerDelegate TimerDel;
+
+		TimerDel.BindUFunction(this, FName("Multi_SetReadyStatus"), InbIsReady);
+
+		GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, TimerDel, 0.03f, false);
+	}
+}
+
+void ACharacterBase::Multi_SetPlayerName_Implementation(const FString& InPlayerName)
+{
+	this->PlayerName = InPlayerName;
+
+	UOverheadPlayerSpot* InOverheadPlayerSpot = Cast<UOverheadPlayerSpot>(this->OverheadPlayerSpot->GetUserWidgetObject());
+
+	if (IsValid(InOverheadPlayerSpot))
+		InOverheadPlayerSpot->UpdatePlayerName();
+	else {
+
+		FTimerHandle MemberTimerHandle;
+		FTimerDelegate TimerDel;
+
+		TimerDel.BindUFunction(this, FName("Multi_SetPlayerName"), InPlayerName);
+
+		GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, TimerDel, 0.03f, false);
+	}
+}
+
+void ACharacterBase::Multi_SetIconAndColorOverheadWidget_Implementation(bool bIsHidden, const FString& InPlayerNameColor)
+{
+	UOverheadPlayerSpot* InOverheadPlayerSpot = Cast<UOverheadPlayerSpot>(this->OverheadPlayerSpot->GetUserWidgetObject());
+
+	if (IsValid(InOverheadPlayerSpot))
+	{
+		InOverheadPlayerSpot->SetPlayerNameColor(InPlayerNameColor);
+		InOverheadPlayerSpot->SetReadyStatusVisibility(bIsHidden);
+	}
+}
+
+void ACharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ACharacterBase, bIsReady);
+	DOREPLIFETIME(ACharacterBase, PlayerName);
 }
 

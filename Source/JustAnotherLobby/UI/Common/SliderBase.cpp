@@ -2,6 +2,7 @@
 
 
 #include "./SliderBase.h"
+#include "Kismet/GameplayStatics.h"
 
 bool USliderBase::Initialize()
 {

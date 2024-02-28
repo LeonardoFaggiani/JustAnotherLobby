@@ -206,6 +206,16 @@ void UJustAnotherLobbyGameInstance::SetFirstTimeLoading(bool InbIsFirstTimeLoadi
     this->bIsFirstTimeLoading = InbIsFirstTimeLoading;
 }
 
+TSubclassOf<ACharacterBase> UJustAnotherLobbyGameInstance::GetHeroeByName(FString InHeroeName)
+{
+    auto GetHeroeByName = [InHeroeName](const FHeroes& Heroe) {
+        return Heroe.Name == InHeroeName;
+        };
+
+    auto InHeroeResource = this->Heroes.FindByPredicate(GetHeroeByName);
+
+    return InHeroeResource->TargetClass;
+}
 
 
 void UJustAnotherLobbyGameInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

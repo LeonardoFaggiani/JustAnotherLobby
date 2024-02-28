@@ -8,7 +8,6 @@
 #include "CommonTextBlock.h"
 #include "Sound/SoundClass.h"
 #include "Sound/SoundMix.h"
-#include "Kismet/GameplayStatics.h"
 #include "SliderBase.generated.h"
 
 /**

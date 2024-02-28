@@ -17,14 +17,19 @@
 	],
 	"Plugins": [
 		{
-			"Name": "ModelingToolsEditorMode",
-			"Enabled": true,
-			"TargetAllowList": [
-				"Editor"
-			]
+			"Name": "CommonUI",
+			"Enabled": true
 		},
 		{
-			"Name": "CommonUI",
+			"Name": "AdvancedSessions",
+			"Enabled": true
+		},
+		{
+			"Name": "AdvancedSteamSessions",
+			"Enabled": true
+		},
+		{
+			"Name": "OnlineSubsystemSteam",
 			"Enabled": true
 		}
 	]
