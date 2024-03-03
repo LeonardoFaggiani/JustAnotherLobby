@@ -33,9 +33,9 @@ void UHeroeCard::SetHeroeSelected()
 
                 UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
 
-                //TSubclassOf<ACharacterBase> CharacterBase = JustAnotherLobbyGameInstance->GetHeroeByName(this->HeroeName->GetText().ToString());
+                TSubclassOf<ACharacterBase> CharacterBase = JustAnotherLobbyGameInstance->GetHeroeByName(this->HeroeName->GetText().ToString());
 
-                //LobbyPlayerController->Client_AssignHeroeToPlayer(CharacterBase);
+                LobbyPlayerController->Client_AssignHeroeToPlayer(CharacterBase);
             }
         }
     }

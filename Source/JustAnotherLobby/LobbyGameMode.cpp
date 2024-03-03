@@ -118,26 +118,19 @@ void ALobbyGameMode::Server_SetViewTargetSpot_Implementation()
 
 void ALobbyGameMode::Server_SpawnLobbyPlayerSpot_Implementation()
 {
-	FLobbyPlayerSpot* PlayerSpotByIndex = GetPlayerSpotByPlayerConnected();
+    FLobbyHeroeSpot* LobbyHeroeSpotByIndex = this->GetLobbyHeroeSpotByPlayerConnected();
 
-	if (PlayerSpotByIndex != nullptr)
-	{
-		FActorSpawnParameters params;
+    if (LobbyHeroeSpotByIndex != nullptr)
+    {
+        FActorSpawnParameters params;
 
-		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers)
-		{
-			ALobbyPlayerSpots* LobbyPlayerSpot = PlayerController->GetPlayerSpot();
-
-			if (!IsValid(LobbyPlayerSpot)) {
-
-				ALobbyPlayerSpots* LobbyPlayerSpotSpawned = Cast<ALobbyPlayerSpots>(GetWorld()->SpawnActor<ALobbyPlayerSpots>(LobbyPlayerSpotClass, PlayerSpotByIndex->Location, PlayerSpotByIndex->Rotation, params));
-
-				PlayerController->SetPlayerSpot(LobbyPlayerSpotSpawned);
-			}
-		}
-	}
+        for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers)
+        {
+            ALobbyPlayerSpots* LobbyPlayerSpotSpawned = Cast<ALobbyPlayerSpots>(GetWorld()->SpawnActor<ALobbyPlayerSpots>(LobbyPlayerSpotClass, LobbyHeroeSpotByIndex->LocationSpot.Location, LobbyHeroeSpotByIndex->LocationSpot.Rotation, params));
+        }
+    }
 }
 
 void ALobbyGameMode::Server_RespawnPlayer_Implementation(ALobbyPlayerController* LobbyPlayerController)
@@ -186,24 +179,16 @@ void ALobbyGameMode::LaunchTheGame()
 
 void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPlayerController)
 {
-	ALobbyPlayerSpots* LobbyPlayerSpot = LobbyPlayerController->GetPlayerSpot();
+	FLobbyHeroeSpot* LobbyHeroeSpotByIndex = this->GetLobbyHeroeSpotByPlayerConnected();
 
-	if (!IsValid(LobbyPlayerSpot))
+	if (LobbyHeroeSpotByIndex == nullptr)
 		return;
 
 	FActorSpawnParameters params;
 
 	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	ACharacterBase* SpawnCharacter = Cast<ACharacterBase>(GetWorld()->SpawnActor<ACharacterBase>(this->HeroeDefault, LobbyPlayerSpot->GetActorTransform(), params));
-
-	//FTransform ActorTransform = LobbyPlayerSpot->GetActorTransform();
-
-	//FVector	Location = ActorTransform.GetLocation();
-
-	//ActorTransform.SetLocation(Location);
-
-	//SpawnCharacter->SetActorTransform(ActorTransform);
+	ACharacterBase* SpawnCharacter = Cast<ACharacterBase>(GetWorld()->SpawnActor<ACharacterBase>(this->HeroeDefault, LobbyHeroeSpotByIndex->LocationHeroe.Location, LobbyHeroeSpotByIndex->LocationHeroe.Rotation, params));
 
 	LobbyPlayerController->SetCurrentCharacter(SpawnCharacter);
 	LobbyPlayerController->PlayerSettings.HeroeSelected = this->HeroeDefault;
@@ -272,11 +257,11 @@ void ALobbyGameMode::SetPlayerInfoToTransfer()
 	//}
 }
 
-FLobbyPlayerSpot* ALobbyGameMode::GetPlayerSpotByPlayerConnected()
+FLobbyHeroeSpot* ALobbyGameMode::GetLobbyHeroeSpotByPlayerConnected()
 {
-	FLobbyPlayerSpot* PlayerSpotIndex = this->JustAnotherLobbyGameInstance->ConfigurationLobbyPlayerSpot.Find(this->AllPlayerControllers.Num());
+	FLobbyHeroeSpot* LobbyHeroeSpot = this->JustAnotherLobbyGameInstance->ConfigurationLobbyHeroeSpot.Find(this->AllPlayerControllers.Num());
 
-	return PlayerSpotIndex;
+	return LobbyHeroeSpot;
 }
 
 void ALobbyGameMode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

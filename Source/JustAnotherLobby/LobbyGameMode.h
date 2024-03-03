@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 #include "Characters/CharacterBase.h"
-#include "UI/Struct/LobbyPlayerSpot.h"
-#include "UI/Struct/LobbyPlayerInfo.h"
+#include "UI/Struct/LobbyHeroeSpot.h"
 #include "UI/Lobby/LobbyPlayerSpots.h"
 #include "LobbyPlayerController.h"
 #include "JustAnotherLobbyGameInstance.h"
@@ -57,7 +56,7 @@ public:
 	void Server_SetViewTargetSpot();
 	void Server_SetViewTargetSpot_Implementation();
 
-	FLobbyPlayerSpot* GetPlayerSpotByPlayerConnected();
+	FLobbyHeroeSpot* GetLobbyHeroeSpotByPlayerConnected();
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
 		TArray<class ALobbyPlayerController*> AllPlayerControllers;

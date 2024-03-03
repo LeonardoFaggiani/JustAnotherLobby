@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Components/WidgetComponent.h"
+#include "../UI/Lobby/OverheadPlayerSpot.h"
 #include "CharacterBase.generated.h"
 
 UCLASS()
@@ -62,6 +63,11 @@ public:
 		void Multi_SetIconAndColorOverheadWidget(bool bIsHidden, const FString& InPlayerNameColor);
 		void Multi_SetIconAndColorOverheadWidget_Implementation(bool bIsHidden, const FString& InPlayerNameColor);
 
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
 protected:
 
 	/** Called for movement input */
@@ -76,9 +82,6 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+private:
+	UOverheadPlayerSpot* CharacterOverhead;
 };

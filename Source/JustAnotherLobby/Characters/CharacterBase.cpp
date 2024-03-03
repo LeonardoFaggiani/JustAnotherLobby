@@ -10,13 +10,12 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "Net/UnrealNetwork.h"
-#include "../UI/Lobby/OverheadPlayerSpot.h"
 
 // Sets default values
 ACharacterBase::ACharacterBase()
 {
 	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 120.0f);
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 120);
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -68,6 +67,12 @@ void ACharacterBase::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+
+	 this->CharacterOverhead = Cast<UOverheadPlayerSpot>(this->OverheadPlayerSpot->GetUserWidgetObject());
+
+	if (IsValid(OverheadPlayerSpot)) {
+		this->CharacterOverhead->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -127,50 +132,47 @@ void ACharacterBase::Look(const FInputActionValue& Value)
 
 void ACharacterBase::Multi_SetReadyStatus_Implementation(bool InbIsReady)
 {
-	this->bIsReady = InbIsReady;
+    this->bIsReady = InbIsReady;
 
-	UOverheadPlayerSpot* InOverheadPlayerSpot = Cast<UOverheadPlayerSpot>(this->OverheadPlayerSpot->GetUserWidgetObject());
+    if (IsValid(this->CharacterOverhead)) {
+        this->CharacterOverhead->UpdateReadyStatus(this->bIsReady);
+		this->CharacterOverhead->SetVisibility(ESlateVisibility::Visible);
+    }
+    else {
 
-	if (IsValid(InOverheadPlayerSpot))
-		InOverheadPlayerSpot->UpdateReadyStatus();
-	else {
+        FTimerHandle MemberTimerHandle;
+        FTimerDelegate TimerDel;
 
-		FTimerHandle MemberTimerHandle;
-		FTimerDelegate TimerDel;
+        TimerDel.BindUFunction(this, FName("Multi_SetReadyStatus"), InbIsReady);
 
-		TimerDel.BindUFunction(this, FName("Multi_SetReadyStatus"), InbIsReady);
-
-		GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, TimerDel, 0.03f, false);
-	}
+        GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, TimerDel, 0.03f, false);
+    }
 }
 
 void ACharacterBase::Multi_SetPlayerName_Implementation(const FString& InPlayerName)
 {
 	this->PlayerName = InPlayerName;
 
-	UOverheadPlayerSpot* InOverheadPlayerSpot = Cast<UOverheadPlayerSpot>(this->OverheadPlayerSpot->GetUserWidgetObject());
+    if (this->CharacterOverhead != nullptr)
+		this->CharacterOverhead->UpdatePlayerName(this->PlayerName);
+    else
+    {
+        FTimerHandle MemberTimerHandle;
+        FTimerDelegate TimerDel;
 
-	if (IsValid(InOverheadPlayerSpot))
-		InOverheadPlayerSpot->UpdatePlayerName();
-	else {
+        TimerDel.BindUFunction(this, FName("Multi_SetPlayerName"), InPlayerName);
 
-		FTimerHandle MemberTimerHandle;
-		FTimerDelegate TimerDel;
-
-		TimerDel.BindUFunction(this, FName("Multi_SetPlayerName"), InPlayerName);
-
-		GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, TimerDel, 0.03f, false);
-	}
+        GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, TimerDel, 0.03f, false);
+    }
 }
 
 void ACharacterBase::Multi_SetIconAndColorOverheadWidget_Implementation(bool bIsHidden, const FString& InPlayerNameColor)
 {
-	UOverheadPlayerSpot* InOverheadPlayerSpot = Cast<UOverheadPlayerSpot>(this->OverheadPlayerSpot->GetUserWidgetObject());
 
-	if (IsValid(InOverheadPlayerSpot))
+	if (IsValid(this->CharacterOverhead))
 	{
-		InOverheadPlayerSpot->SetPlayerNameColor(InPlayerNameColor);
-		InOverheadPlayerSpot->SetReadyStatusVisibility(bIsHidden);
+		this->CharacterOverhead->SetPlayerNameColor(InPlayerNameColor);
+		this->CharacterOverhead->SetReadyStatusVisibility(bIsHidden);
 	}
 }
 

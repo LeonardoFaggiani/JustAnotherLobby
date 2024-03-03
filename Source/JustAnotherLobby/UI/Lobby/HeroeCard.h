@@ -26,32 +26,32 @@ public:
 	void SetHeroeSelected();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
-	TSubclassOf<UHeroeAttributeStats> HeroeAttributeStats;
+		TSubclassOf<UHeroeAttributeStats> HeroeAttributeStats;
 
 	UPROPERTY(meta = (BindWidget))
-	UHorizontalBox* StatsContainer;
+		UHorizontalBox* StatsContainer;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UCommonTextBlock> HeroeName;
+		TObjectPtr<UCommonTextBlock> HeroeName;
 
 	UPROPERTY(meta = (BindWidget))
-	UImage* HeroeIcon;
+		UImage* HeroeIcon;
 
 	UPROPERTY(EditAnywhere, Category = "Heroe Settings")
-	FString Name;
+		FString Name;
 
 	UPROPERTY(EditAnywhere, Category = "Heroe Settings")
-	FString IconPath;
+		FString IconPath;
 
 	UFUNCTION(BlueprintCallable)
-	void SetAttributeStats(const FHeroes& InHeroes);
+		void SetAttributeStats(const FHeroes& InHeroes);
 
 	UFUNCTION(BlueprintCallable)
-	void SetHeroeName(FString InHeroeName);
+		void SetHeroeName(FString InHeroeName);
 
 	UFUNCTION(BlueprintCallable)
-	void SetHeroeIcon(FString InHeroeIcon);
+		void SetHeroeIcon(FString InHeroeIcon);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveDisabledStateToAllItems();
+		void RemoveDisabledStateToAllItems();
 };

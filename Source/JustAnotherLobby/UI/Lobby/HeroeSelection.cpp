@@ -35,7 +35,7 @@ void UHeroeSelection::OnBackButtonClicked()
 
     ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(this->GetOwningPlayer());
 
-    //LobbyPlayerController->Client_SwitchToLobbyMode();
+    LobbyPlayerController->Client_SwitchToLobbyMode();
 }
 
 void UHeroeSelection::FillContainer()

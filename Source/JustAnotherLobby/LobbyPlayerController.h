@@ -7,12 +7,12 @@
 #include "Components/Widget.h"
 #include "JustAnotherLobbyGameInstance.h"
 #include "UI/Struct/LobbyPlayerInfo.h"
+#include "UI/Struct/LobbyHeroeSpot.h"
 #include "UI/Lobby/Lobby.h"
 #include "UI/Lobby/HeroeSelection.h"
 #include "LobbyPlayerController.generated.h"
 
 class ACharacterBase;
-class ALobbyPlayerSpots;
 
 /**
  * 
@@ -27,8 +27,8 @@ public:
 
 	void SetCurrentCharacter(ACharacterBase* InCurrentCharacter);
 	ACharacterBase* GetCurrentCharacter();
-	void SetPlayerSpot(ALobbyPlayerSpots* InPlayerSpot);
-	ALobbyPlayerSpots* GetPlayerSpot();
+	void SetLobbyHeroeSpot(const FLobbyHeroeSpot& InLobbyHeroeSpot);
+	FLobbyHeroeSpot GetLobbyHeroeSpot();
 
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<ULobby> LobbyClass;
@@ -36,8 +36,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, Replicated)
 	FLobbyPlayerInfo PlayerSettings;
 
-	UPROPERTY(BlueprintReadWrite, Replicated)
-	ALobbyPlayerSpots* PlayerSpot;
+	UPROPERTY(BlueprintReadWrite)
+	FLobbyHeroeSpot LobbyHeroeSpot;
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void Server_CallUpdate(const FLobbyPlayerInfo& PlayerInfo);

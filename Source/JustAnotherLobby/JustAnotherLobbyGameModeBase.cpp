@@ -3,3 +3,7 @@
 
 #include "JustAnotherLobbyGameModeBase.h"
 
+AJustAnotherLobbyGameModeBase::AJustAnotherLobbyGameModeBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+    DefaultPawnClass = nullptr;
+}

@@ -14,4 +14,6 @@ class JUSTANOTHERLOBBY_API AJustAnotherLobbyGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	AJustAnotherLobbyGameModeBase(const FObjectInitializer& ObjectInitializer);
 };

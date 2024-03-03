@@ -7,12 +7,12 @@ AJustAnotherLobbyPlayerState::AJustAnotherLobbyPlayerState() {
 
 }
 
-void AJustAnotherLobbyPlayerState::AddHeroeCard(UHeroeCard* InHeroeCard)
-{
-    this->HeroesCards.Add(InHeroeCard);
-}
-
-TArray<UHeroeCard*> AJustAnotherLobbyPlayerState::GetHeroesCards()
-{
-    return this->HeroesCards;
-}
+//void AJustAnotherLobbyPlayerState::AddHeroeCard(UHeroeCard* InHeroeCard)
+//{
+//    this->HeroesCards.Add(InHeroeCard);
+//}
+//
+//TArray<UHeroeCard*> AJustAnotherLobbyPlayerState::GetHeroesCards()
+//{
+//    return this->HeroesCards;
+//}

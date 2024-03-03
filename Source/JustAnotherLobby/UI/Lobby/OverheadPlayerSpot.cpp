@@ -2,33 +2,24 @@
 
 #include "OverheadPlayerSpot.h"
 
-void UOverheadPlayerSpot::UpdatePlayerName()
+void UOverheadPlayerSpot::UpdatePlayerName(FString InPlayerName)
 {
-    if (IsValid(this->CharacterBase))
-        this->LobbyPlayerName->SetText(FText::FromString(this->CharacterBase->PlayerName));
+    this->LobbyPlayerName->SetText(FText::FromString(InPlayerName));    
 }
 
-void UOverheadPlayerSpot::UpdateReadyStatus()
+void UOverheadPlayerSpot::UpdateReadyStatus(bool bIsReady)
 {
-    if (IsValid(this->CharacterBase)) {
+    UTexture2D* ReadyStatusIconTexture = bIsReady ?
+        Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Common/Textures/checkmark-small")))
+        :
+        Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Common/Textures/cancel-small")));
 
-        UTexture2D* ReadyStatusIconTexture = this->CharacterBase->bIsReady ?
-            Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Materials/Textures/checkmark-small")))
-            :
-            Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Materials/Textures/cancel-small")));
+    if (IsValid(ReadyStatusIconTexture))
+        this->ReadyStatusIcon->SetBrushFromTexture(ReadyStatusIconTexture);
 
-        if (IsValid(ReadyStatusIconTexture))
-            this->ReadyStatusIcon->SetBrushFromTexture(ReadyStatusIconTexture);
+    FString color = bIsReady ? FString("#38E33F") : FString("#FF3122");
 
-        FString color = this->CharacterBase->bIsReady ? FString("#38E33F") : FString("#FF3122");
-
-        this->SetPlayerNameColor(color);
-    }
-}
-
-void UOverheadPlayerSpot::SetCharacter(ACharacterBase* InCharacterBase)
-{
-    this->CharacterBase = InCharacterBase;
+    this->SetPlayerNameColor(color);
 }
 
 void UOverheadPlayerSpot::SetReadyStatusVisibility(bool bIsHidden)
@@ -36,7 +27,7 @@ void UOverheadPlayerSpot::SetReadyStatusVisibility(bool bIsHidden)
     float Opacity = bIsHidden ? 0 : 1;
 
     this->ReadyStatusIcon->SetRenderOpacity(Opacity);
-    this->ReadyStatusIcon->SetOpacity(Opacity);
+    this->ReadyStatusIcon->SetOpacity(Opacity);    
 }
 
 void UOverheadPlayerSpot::SetPlayerNameColor(FString Color)

@@ -8,7 +8,7 @@
 #include "UI/MainMenu/MainMenu.h"
 #include "./UI/Struct/Heroes.h"
 #include "./UI/Struct/ConfigurationMaps.h"
-#include "./UI/Struct/LobbyPlayerSpot.h"
+#include "./UI/Struct/LobbyHeroeSpot.h"
 #include "./UI/LoadingScreen/LoadingScreen.h"
 #include <MoviePlayer/Public/MoviePlayer.h>
 
@@ -101,7 +101,7 @@ public:
     TMap<FString, FConfigurationMaps> ConfigurationMaps;
 
     UPROPERTY(EditAnyWhere)
-    TMap<int32, FLobbyPlayerSpot> ConfigurationLobbyPlayerSpot;
+    TMap<int32, FLobbyHeroeSpot> ConfigurationLobbyHeroeSpot;
 
     UFUNCTION(BlueprintCallable)
     void SetHostSettings(int32 InNumberOfPlayers, FString InServerName);

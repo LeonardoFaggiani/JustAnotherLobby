@@ -126,14 +126,14 @@ ACharacterBase* ALobbyPlayerController::GetCurrentCharacter()
 	return this->CurrentCharacter;
 }
 
-void ALobbyPlayerController::SetPlayerSpot(ALobbyPlayerSpots* InPlayerSpot)
+void ALobbyPlayerController::SetLobbyHeroeSpot(const FLobbyHeroeSpot& InLobbyHeroeSpot)
 {
-	this->PlayerSpot = InPlayerSpot;
+	this->LobbyHeroeSpot = InLobbyHeroeSpot;
 }
 
-ALobbyPlayerSpots* ALobbyPlayerController::GetPlayerSpot()
+FLobbyHeroeSpot ALobbyPlayerController::GetLobbyHeroeSpot()
 {
-	return this->PlayerSpot;
+	return this->LobbyHeroeSpot;
 }
 
 AActor* ALobbyPlayerController::GetActorByName(FString InActorName)
@@ -163,5 +163,5 @@ void ALobbyPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ALobbyPlayerController, PlayerSettings);
-	DOREPLIFETIME(ALobbyPlayerController, PlayerSpot);
+	//DOREPLIFETIME(ALobbyPlayerController, PlayerSpot);
 }

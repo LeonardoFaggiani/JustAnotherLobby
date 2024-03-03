@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
-#include "../../Characters/CharacterBase.h"
 #include "../Common/UserWidgetBase.h"
 #include "OverheadPlayerSpot.generated.h"
 
@@ -19,9 +18,8 @@ class JUSTANOTHERLOBBY_API UOverheadPlayerSpot : public UUserWidgetBase
 
 public:
 
-	void UpdateReadyStatus();
-	void UpdatePlayerName();
-	void SetCharacter(ACharacterBase* InCharacterBase);
+	void UpdateReadyStatus(bool bIsReady);
+	void UpdatePlayerName(FString InPlayerName);
 
 	void SetReadyStatusVisibility(bool bIsHidden);
 	void SetPlayerNameColor(FString InColor);
@@ -34,8 +32,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		UImage* ReadyStatusIcon;
-
-	ACharacterBase * CharacterBase;
 
 protected:
 	virtual void NativeDestruct() override;
