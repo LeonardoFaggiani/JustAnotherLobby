@@ -29,6 +29,8 @@ public:
 	UHorizontalBox* Container;
 
 	void FillContainer();
+	TArray<UHeroeCard*>  GetHeroeCards();
+	void SetHeroeCard(UHeroeCard* InHeroeCard);
 
 protected:
 	virtual bool Initialize() override;
@@ -38,5 +40,6 @@ private:
 
 private:
 	class UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance;
+	TArray<UHeroeCard*> HeroeCards;
 	
 };

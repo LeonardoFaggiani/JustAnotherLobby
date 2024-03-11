@@ -30,11 +30,14 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer) {
 		//if the joining player is a lobby player controller, add him to a list of connected Players
 		if (NewPlayer) {
 
-			this->HeroeDefault = this->JustAnotherLobbyGameInstance->GetHeroeByName("Warrior");
+			//this->HeroeDefault = this->JustAnotherLobbyGameInstance->GetHeroeByName("Warrior");
 
 			ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(NewPlayer);
 
 			this->AllPlayerControllers.Add(LobbyPlayerController);
+
+			//LobbyPlayerController->SetPlayerIndex(this->AllPlayerControllers.IndexOfByKey(LobbyPlayerController));
+			LobbyPlayerController->SetPlayerIndex(this->AllPlayerControllers.Num());
 
 			if (this->JustAnotherLobbyGameInstance != nullptr) {
 
@@ -48,7 +51,7 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer) {
 
 				LobbyPlayerController->Client_UpdateLobbySettings(mapImage, *DefaultMap->Name);
 
-				Server_SpawnLobbyPlayerSpot();
+				Server_SpawnLobbyPlayerSpot(LobbyPlayerController);
 
 				Server_RespawnPlayer(LobbyPlayerController);
 
@@ -116,9 +119,9 @@ void ALobbyGameMode::Server_SetViewTargetSpot_Implementation()
 	}
 }
 
-void ALobbyGameMode::Server_SpawnLobbyPlayerSpot_Implementation()
+void ALobbyGameMode::Server_SpawnLobbyPlayerSpot_Implementation(ALobbyPlayerController* LobbyPlayerController)
 {
-    FLobbyHeroeSpot* LobbyHeroeSpotByIndex = this->GetLobbyHeroeSpotByPlayerConnected();
+    FLobbyHeroeSpot* LobbyHeroeSpotByIndex = this->GetLobbyHeroeSpotByPlayerConnected(LobbyPlayerController);
 
     if (LobbyHeroeSpotByIndex != nullptr)
     {
@@ -131,11 +134,6 @@ void ALobbyGameMode::Server_SpawnLobbyPlayerSpot_Implementation()
             ALobbyPlayerSpots* LobbyPlayerSpotSpawned = Cast<ALobbyPlayerSpots>(GetWorld()->SpawnActor<ALobbyPlayerSpots>(LobbyPlayerSpotClass, LobbyHeroeSpotByIndex->LocationSpot.Location, LobbyHeroeSpotByIndex->LocationSpot.Rotation, params));
         }
     }
-}
-
-void ALobbyGameMode::Server_RespawnPlayer_Implementation(ALobbyPlayerController* LobbyPlayerController)
-{
-	this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
 }
 
 void ALobbyGameMode::Server_UpdatePlayerName_Implementation()
@@ -179,9 +177,9 @@ void ALobbyGameMode::LaunchTheGame()
 
 void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPlayerController)
 {
-	FLobbyHeroeSpot* LobbyHeroeSpotByIndex = this->GetLobbyHeroeSpotByPlayerConnected();
+	FLobbyHeroeSpot* LobbyHeroeSpotByIndex = this->GetLobbyHeroeSpotByPlayerConnected(LobbyPlayerController);
 
-	if (LobbyHeroeSpotByIndex == nullptr)
+	if (LobbyHeroeSpotByIndex == nullptr && !IsValid(this->HeroeDefault))
 		return;
 
 	FActorSpawnParameters params;
@@ -192,7 +190,7 @@ void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPla
 
 	LobbyPlayerController->SetCurrentCharacter(SpawnCharacter);
 	LobbyPlayerController->PlayerSettings.HeroeSelected = this->HeroeDefault;
-	LobbyPlayerController->PlayerSettings.PlayerIndex = this->AllPlayerControllers.IndexOfByKey(LobbyPlayerController);
+
 
 	this->UpdatePlayerName(LobbyPlayerController);
 }
@@ -205,6 +203,11 @@ void ALobbyGameMode::DestroyCharacterSelectedIfExits(ALobbyPlayerController* Lob
 		CharacterBase->Destroy();
 
 	this->SpawnCharacterOnPlayerSpot(LobbyPlayerController);
+}
+
+void ALobbyGameMode::Server_RespawnPlayer_Implementation(ALobbyPlayerController* LobbyPlayerController)
+{
+	this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
 }
 
 void ALobbyGameMode::UpdatePlayerName(ALobbyPlayerController* LobbyPlayerController)
@@ -257,9 +260,9 @@ void ALobbyGameMode::SetPlayerInfoToTransfer()
 	//}
 }
 
-FLobbyHeroeSpot* ALobbyGameMode::GetLobbyHeroeSpotByPlayerConnected()
+FLobbyHeroeSpot* ALobbyGameMode::GetLobbyHeroeSpotByPlayerConnected(ALobbyPlayerController* LobbyPlayerController)
 {
-	FLobbyHeroeSpot* LobbyHeroeSpot = this->JustAnotherLobbyGameInstance->ConfigurationLobbyHeroeSpot.Find(this->AllPlayerControllers.Num());
+	FLobbyHeroeSpot* LobbyHeroeSpot = this->JustAnotherLobbyGameInstance->ConfigurationLobbyHeroeSpot.Find(LobbyPlayerController->PlayerSettings.PlayerIndex);
 
 	return LobbyHeroeSpot;
 }

@@ -45,8 +45,8 @@ public:
 	void Server_EveryoneUpdate_Implementation();
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
-	void Server_SpawnLobbyPlayerSpot();
-	void Server_SpawnLobbyPlayerSpot_Implementation();
+	void Server_SpawnLobbyPlayerSpot(ALobbyPlayerController* LobbyPlayerController);
+	void Server_SpawnLobbyPlayerSpot_Implementation(ALobbyPlayerController* LobbyPlayerController);
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void Server_UpdatePlayerName();
@@ -56,7 +56,7 @@ public:
 	void Server_SetViewTargetSpot();
 	void Server_SetViewTargetSpot_Implementation();
 
-	FLobbyHeroeSpot* GetLobbyHeroeSpotByPlayerConnected();
+	FLobbyHeroeSpot* GetLobbyHeroeSpotByPlayerConnected(ALobbyPlayerController* LobbyPlayerController);
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
 		TArray<class ALobbyPlayerController*> AllPlayerControllers;

@@ -60,8 +60,17 @@ void UHeroeSelection::FillContainer()
 
             HorizontalBoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Bottom);
 
-            //AUdemyMultiplayerPlayerState* UdemyMultiplayerPlayerState = LobbyPlayerController->GetPlayerState<AUdemyMultiplayerPlayerState>();
-            //UdemyMultiplayerPlayerState->AddHeroeItem(InHeroeItem);
+            this->SetHeroeCard(InHeroeItem);
         }
     }
+}
+
+TArray<UHeroeCard*> UHeroeSelection::GetHeroeCards()
+{
+    return this->HeroeCards;
+}
+
+void UHeroeSelection::SetHeroeCard(UHeroeCard* InHeroeCard)
+{
+    this->HeroeCards.Add(InHeroeCard);
 }

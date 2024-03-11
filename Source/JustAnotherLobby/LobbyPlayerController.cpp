@@ -131,6 +131,13 @@ void ALobbyPlayerController::SetLobbyHeroeSpot(const FLobbyHeroeSpot& InLobbyHer
 	this->LobbyHeroeSpot = InLobbyHeroeSpot;
 }
 
+
+void ALobbyPlayerController::SetPlayerIndex(int32 InIndex)
+{
+	this->PlayerSettings.PlayerIndex = InIndex;
+}
+
+
 FLobbyHeroeSpot ALobbyPlayerController::GetLobbyHeroeSpot()
 {
 	return this->LobbyHeroeSpot;

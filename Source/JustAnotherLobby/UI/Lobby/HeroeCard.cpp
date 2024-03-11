@@ -4,8 +4,9 @@
 #include "HeroeCard.h"
 #include "../../LobbyPlayerController.h"
 #include "Components/HorizontalBoxSlot.h"
-#include "../../JustAnotherLobbyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "../../JustAnotherLobbyGameInstance.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 
 UHeroeCard::UHeroeCard()
 {
@@ -76,8 +77,16 @@ void UHeroeCard::RemoveDisabledStateToAllItems()
 {
     ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(this->GetOwningPlayer());
 
-    //AUdemyMultiplayerPlayerState* UdemyMultiplayerPlayerState = LobbyPlayerController->GetPlayerState<AUdemyMultiplayerPlayerState>();
+    TArray<UUserWidget*> FoundWidgets = TArray<UUserWidget*>();
 
-    //for (UHeroeCard* HeroeItem : UdemyMultiplayerPlayerState->GetHeroesItems())
-    //    HeroeItem->SetIsEnabled(true);
+    UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetWorld(), FoundWidgets, UHeroeSelection::StaticClass());
+
+    for (UUserWidget* HeroeSelectionWidget : FoundWidgets)
+    {
+        UHeroeSelection* HeroeSelection = Cast<UHeroeSelection>(HeroeSelectionWidget);
+        HeroeSelection->GetHeroeCards();
+
+        for (UHeroeCard* HeroeCard : HeroeSelection->GetHeroeCards())
+            HeroeCard->SetIsEnabled(true);
+    }
 }

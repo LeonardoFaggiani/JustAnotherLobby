@@ -29,6 +29,7 @@ public:
 	ACharacterBase* GetCurrentCharacter();
 	void SetLobbyHeroeSpot(const FLobbyHeroeSpot& InLobbyHeroeSpot);
 	FLobbyHeroeSpot GetLobbyHeroeSpot();
+	void SetPlayerIndex(int32 InIndex);
 
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<ULobby> LobbyClass;
@@ -81,6 +82,6 @@ private:
 	class ALobbyGameMode* LobbyGameMode;
 	class UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance;
 	AActor* ViewTarget;
-	AActor* GetActorByName(FString InActorName);
+	AActor* GetActorByName(FString InActorName);	
 	ACharacterBase* CurrentCharacter;
 };
