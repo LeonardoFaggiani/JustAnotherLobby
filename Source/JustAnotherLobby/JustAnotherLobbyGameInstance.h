@@ -11,6 +11,7 @@
 #include "./UI/Struct/LobbyHeroeSpot.h"
 #include "./UI/LoadingScreen/LoadingScreen.h"
 #include <MoviePlayer/Public/MoviePlayer.h>
+#include "UI/Struct/InGamePlayerInfo.h"
 
 #include "JustAnotherLobbyGameInstance.generated.h"
 
@@ -96,6 +97,7 @@ public:
 
     UPROPERTY(EditAnyWhere)
     TArray<FHeroes> Heroes;
+    TArray<FInGamePlayerInfo> InGamePlayersInfo;
 
     UPROPERTY(EditAnyWhere)
     TMap<FString, FConfigurationMaps> ConfigurationMaps;

@@ -29,6 +29,7 @@ public:
 	UHorizontalBox* Container;
 
 	void FillContainer();
+	bool IsHeroeCardEnabled(FHeroes Heroes);
 	TArray<UHeroeCard*>  GetHeroeCards();
 	void SetHeroeCard(UHeroeCard* InHeroeCard);
 

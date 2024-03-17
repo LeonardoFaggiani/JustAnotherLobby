@@ -43,8 +43,6 @@ void UHeroeSelection::FillContainer()
     //Fill the container of heroes with the card of each heroes and thier stats
     this->Container->ClearChildren();
 
-    ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(this->GetOwningPlayer());
-
     if (IsValid(this->JustAnotherLobbyGameInstance))
     {
         for (FHeroes Heroes : this->JustAnotherLobbyGameInstance->Heroes)
@@ -60,14 +58,32 @@ void UHeroeSelection::FillContainer()
 
             HorizontalBoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Bottom);
 
+            InHeroeItem->SetIsEnabled(this->IsHeroeCardEnabled(Heroes));
+
             this->SetHeroeCard(InHeroeItem);
         }
     }
 }
 
+
 TArray<UHeroeCard*> UHeroeSelection::GetHeroeCards()
 {
     return this->HeroeCards;
+}
+
+bool UHeroeSelection::IsHeroeCardEnabled(FHeroes Heroes)
+{
+    ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(this->GetOwningPlayer());
+
+    if (LobbyPlayerController != nullptr && IsValid(LobbyPlayerController->PlayerSettings.HeroeSelected)) {
+
+        if (Heroes.TargetClass.GetDefaultObject()->GetName() == LobbyPlayerController->PlayerSettings.HeroeSelected.GetDefaultObject()->GetName())
+            return false;
+
+        return true;
+    }
+
+    return true;
 }
 
 void UHeroeSelection::SetHeroeCard(UHeroeCard* InHeroeCard)
