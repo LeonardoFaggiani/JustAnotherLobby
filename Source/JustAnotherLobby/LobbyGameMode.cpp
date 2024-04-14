@@ -126,7 +126,6 @@ void ALobbyGameMode::Server_SpawnLobbyPlayerSpot_Implementation(ALobbyPlayerCont
 
         for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers)        
             ALobbyPlayerSpots* LobbyPlayerSpotSpawned = Cast<ALobbyPlayerSpots>(GetWorld()->SpawnActor<ALobbyPlayerSpots>(LobbyPlayerSpotClass, LobbyHeroeSpotByIndex->LocationSpot.Location, LobbyHeroeSpotByIndex->LocationSpot.Rotation, params));
-
     }
 }
 
@@ -181,10 +180,15 @@ void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPla
 
 	if (LobbyHeroeSpotByIndex != nullptr)
 	{
+		LobbyHeroeSpotByIndex->LocationSpot.Location[2] = 28;
+
 		ACharacterBase* SpawnCharacter = Cast<ACharacterBase>(GetWorld()->SpawnActor<ACharacterBase>(this->HeroeDefault, LobbyHeroeSpotByIndex->LocationSpot.Location, LobbyHeroeSpotByIndex->LocationHeroe.Rotation, params));
+		SpawnCharacter->Multi_PlayStartLevelMontage();
 
 		LobbyPlayerController->SetCurrentCharacter(SpawnCharacter);
-		LobbyPlayerController->PlayerSettings.HeroeSelected = this->HeroeDefault;
+		LobbyPlayerController->PlayerSettings.HeroeSelected = this->HeroeDefault;		
+
+		UE_LOG(LogTemp, Warning, TEXT("SpawnCharacterOnPlayerSpot Fired!"));
 	}
 
 	this->UpdatePlayerName(LobbyPlayerController);
@@ -213,7 +217,7 @@ void ALobbyGameMode::UpdatePlayerName(ALobbyPlayerController* LobbyPlayerControl
 
 	if (IsValid(CharacterBase) && IsValid(JustAnotherLobbyPlayerState)) {
 
-		LobbyPlayerController->PlayerSettings.PlayerName = JustAnotherLobbyPlayerState->GetPlayerName();
+		LobbyPlayerController->PlayerSettings.PlayerName = JustAnotherLobbyPlayerState->GetPlayerName();		
 
 		CharacterBase->Multi_SetPlayerName(LobbyPlayerController->PlayerSettings.PlayerName);
 	}

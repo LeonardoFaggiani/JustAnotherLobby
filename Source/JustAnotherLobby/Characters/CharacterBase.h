@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "Components/WidgetComponent.h"
 #include "../UI/Lobby/OverheadPlayerSpot.h"
+#include "Animation/AnimMontage.h"
 #include "CharacterBase.generated.h"
 
 UCLASS()
@@ -38,6 +39,9 @@ class JUSTANOTHERLOBBY_API ACharacterBase : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Anim Montage", meta = (AllowPrivateAccess = "true"))
+		class UAnimMontage* StartLevelMontage;
+
 public:
 	// Sets default values for this character's properties
 	ACharacterBase();
@@ -62,6 +66,11 @@ public:
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
 		void Multi_SetIconAndColorOverheadWidget(bool bIsHidden, const FString& InPlayerNameColor);
 		void Multi_SetIconAndColorOverheadWidget_Implementation(bool bIsHidden, const FString& InPlayerNameColor);
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+		void Multi_PlayStartLevelMontage();
+		void Multi_PlayStartLevelMontage_Implementation();
+
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

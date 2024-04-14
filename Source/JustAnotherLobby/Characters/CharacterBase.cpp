@@ -176,6 +176,14 @@ void ACharacterBase::Multi_SetIconAndColorOverheadWidget_Implementation(bool bIs
 	}
 }
 
+void ACharacterBase::Multi_PlayStartLevelMontage_Implementation()
+{	
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (IsValid(AnimInstance))
+		AnimInstance->Montage_Play(this->StartLevelMontage);
+}
+
 void ACharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
