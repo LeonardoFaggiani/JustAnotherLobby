@@ -46,7 +46,7 @@ void AInGameGameMode::Logout(AController* Exiting)
 void AInGameGameMode::Server_RespawnPlayer_Implementation(AInGamePlayerController* InGamePlayerController)
 {
 	FActorSpawnParameters params;
-	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	int32 InPlayerIndex = this->AllPlayerControllers.IndexOfByKey(InGamePlayerController);
 

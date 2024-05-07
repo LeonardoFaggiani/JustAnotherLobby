@@ -7,8 +7,8 @@ void UHeroeAttributeStats::SetIcon(FString InIconImage)
 {
     UTexture2D* IconTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, *InIconImage));
 
-    if (IsValid(IconTexture))
-        this->Icon->SetBrushFromTexture(IconTexture);
+    if (IsValid(IconTexture)) 
+        this->Icon->SetBrushFromTexture(IconTexture);        
 }
 
 void UHeroeAttributeStats::SetPoints(int32 InAttributePoint)

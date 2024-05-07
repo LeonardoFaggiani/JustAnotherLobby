@@ -6,6 +6,7 @@
 #include "Net/UnrealNetwork.h"
 #include "UI/Struct/InGamePlayerInfo.h"
 
+
 ALobbyGameMode::ALobbyGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	PlayerControllerClass = ALobbyPlayerController::StaticClass();
@@ -122,7 +123,7 @@ void ALobbyGameMode::Server_SpawnLobbyPlayerSpot_Implementation(ALobbyPlayerCont
     {
         FActorSpawnParameters params;
 
-        params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
         for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers)        
             ALobbyPlayerSpots* LobbyPlayerSpotSpawned = Cast<ALobbyPlayerSpots>(GetWorld()->SpawnActor<ALobbyPlayerSpots>(LobbyPlayerSpotClass, LobbyHeroeSpotByIndex->LocationSpot.Location, LobbyHeroeSpotByIndex->LocationSpot.Rotation, params));
@@ -176,13 +177,11 @@ void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPla
 
 	FActorSpawnParameters params;
 
-	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	if (LobbyHeroeSpotByIndex != nullptr)
 	{
-		LobbyHeroeSpotByIndex->LocationSpot.Location[2] = 28;
-
-		ACharacterBase* SpawnCharacter = Cast<ACharacterBase>(GetWorld()->SpawnActor<ACharacterBase>(this->HeroeDefault, LobbyHeroeSpotByIndex->LocationSpot.Location, LobbyHeroeSpotByIndex->LocationHeroe.Rotation, params));
+		ACharacterBase* SpawnCharacter = Cast<ACharacterBase>(GetWorld()->SpawnActor<ACharacterBase>(this->HeroeDefault, LobbyHeroeSpotByIndex->LocationHeroe.Location, LobbyHeroeSpotByIndex->LocationHeroe.Rotation, params));
 		SpawnCharacter->Multi_PlayStartLevelMontage();
 
 		LobbyPlayerController->SetCurrentCharacter(SpawnCharacter);
