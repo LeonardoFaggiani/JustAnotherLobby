@@ -186,8 +186,6 @@ void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPla
 
 		LobbyPlayerController->SetCurrentCharacter(SpawnCharacter);
 		LobbyPlayerController->PlayerSettings.HeroeSelected = this->HeroeDefault;		
-
-		UE_LOG(LogTemp, Warning, TEXT("SpawnCharacterOnPlayerSpot Fired!"));
 	}
 
 	this->UpdatePlayerName(LobbyPlayerController);
@@ -226,9 +224,8 @@ void ALobbyGameMode::UpdateReadyStatus(ALobbyPlayerController* LobbyPlayerContro
 {
 	ACharacterBase* CharacterBase = LobbyPlayerController->GetCurrentCharacter();
 
-	if (IsValid(CharacterBase)) {
-		CharacterBase->Multi_SetReadyStatus(LobbyPlayerController->PlayerSettings.bPlayerReadyState);
-	}
+	if (IsValid(CharacterBase))
+		CharacterBase->Multi_SetReadyStatus(LobbyPlayerController->PlayerSettings.bPlayerReadyState);	
 }
 
 void ALobbyGameMode::FillConnectedPlayers()
@@ -238,10 +235,8 @@ void ALobbyGameMode::FillConnectedPlayers()
 	if (this->CurrentPlayers > 0)
 		this->ConnectedPlayers.Empty();
 
-	for (ALobbyPlayerController* LobbyPlayerController : this->AllPlayerControllers)
-	{
-		this->ConnectedPlayers.Add(LobbyPlayerController->PlayerSettings);
-	}
+	for (ALobbyPlayerController* LobbyPlayerController : this->AllPlayerControllers)	
+		this->ConnectedPlayers.Add(LobbyPlayerController->PlayerSettings);	
 }
 
 void ALobbyGameMode::SetPlayerInfoToTransfer()

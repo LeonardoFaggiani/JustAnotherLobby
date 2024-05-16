@@ -102,7 +102,7 @@ bool UJustAnotherLobbyGameInstance::GetBackToMainMenu()
 
 void UJustAnotherLobbyGameInstance::BeginLoadingScreen_Implementation(const FString& InMapName)
 {
-    if (InMapName == "/Game/ThirdPerson/Maps/LobbyChampionSelection")
+    if (InMapName == "/Game/Maps/Lobby")
     {
         if (this->LoadingScreen->IsInViewport()) {
             this->LoadingScreen->TransBounceInCompleted();
@@ -112,7 +112,7 @@ void UJustAnotherLobbyGameInstance::BeginLoadingScreen_Implementation(const FStr
 
 void UJustAnotherLobbyGameInstance::EndLoadingScreen_Implementation(UWorld* InLoadedWorld)
 {
-    if (InLoadedWorld->GetName() == "LobbyChampionSelection")
+    if (InLoadedWorld->GetName() == "Lobby")
     {
         if (!this->LoadingScreen->IsInViewport()) {
             this->ShowLoadingScreen(false);
@@ -131,8 +131,6 @@ void UJustAnotherLobbyGameInstance::ShowLoadingScreen(bool bWithTransition)
     }
 
     bWithTransition ? this->LoadingScreen->TransBounceIn() : this->LoadingScreen->TransBounceInCompleted();
-
-    //this->LoadingScreen->SetMenuInterface(this);
 }
 
 void UJustAnotherLobbyGameInstance::HideLoadingScreen(bool bWithTransition)
@@ -145,10 +143,7 @@ void UJustAnotherLobbyGameInstance::HideLoadingScreen(bool bWithTransition)
         this->LoadingScreen->Setup();
 
     this->LoadingScreen->TransBounceOut();
-    //this->LoadingScreen->SetMenuInterface(this);
 }
-
-
 
 void UJustAnotherLobbyGameInstance::SetHostSettings(int32 InNumberOfPlayers, FString InServerName) {
     this->MaxPlayers = InNumberOfPlayers;
