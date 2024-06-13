@@ -23,7 +23,15 @@ public class JustAnotherLobby : ModuleRules
                 new string[] {
                     "UMG",
                     "Slate",
-                    "CommonUI"
+                    "CommonUI",
+                    "JustAnotherLobbyLoadingScreen",
+                    "Slate",
+                    "SlateCore",
+                    "InputCore",
+                    "MoviePlayer",
+                    "GameplayAbilities",
+                    "GameplayTags",
+                    "GameplayTasks"
                 });
 
         // Uncomment if you are using Slate UI

@@ -17,10 +17,6 @@ class JUSTANOTHERLOBBY_API AJustAnotherLobbyPlayerState : public APlayerState
 
 	AJustAnotherLobbyPlayerState();
 
-public:
-	//void AddHeroeCard(UHeroeCard* InHeroeCard);
-	//TArray<UHeroeCard*> GetHeroesCards();
-
 private:
 	TArray<UHeroeCard*> HeroesCards;
 	

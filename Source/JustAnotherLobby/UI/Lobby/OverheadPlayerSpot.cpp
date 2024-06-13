@@ -10,14 +10,14 @@ void UOverheadPlayerSpot::UpdatePlayerName(FString InPlayerName)
 void UOverheadPlayerSpot::UpdateReadyStatus(bool bIsReady)
 {
     UTexture2D* ReadyStatusIconTexture = bIsReady ?
-        Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Common/Textures/checkmark-small")))
+        Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Common/Textures/ReadyOk")))
         :
-        Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Common/Textures/cancel-small")));
+        Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, TEXT("/Game/UI/Common/Textures/UnReady")));
 
     if (IsValid(ReadyStatusIconTexture))
         this->ReadyStatusIcon->SetBrushFromTexture(ReadyStatusIconTexture);
 
-    FString color = bIsReady ? FString("#38E33F") : FString("#FF3122");
+    FString color = bIsReady ? FString("#6acc69") : FString("#e64849");
 
     this->SetPlayerNameColor(color);
 }

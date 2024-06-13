@@ -5,6 +5,7 @@
 #include "LobbyGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "./UI/Lobby/OverheadPlayerSpot.h"
+#include "Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "Components/Widget.h"
 #include "Net/UnrealNetwork.h"
 
@@ -17,12 +18,9 @@ ALobbyPlayerController::ALobbyPlayerController(const FObjectInitializer& ObjectI
 		AGameModeBase* GameMode = UGameplayStatics::GetGameMode(World);
 
 		if (IsValid(GameMode))
-			LobbyGameMode = Cast<ALobbyGameMode>(GameMode);
+			this->LobbyGameMode = Cast<ALobbyGameMode>(GameMode);
 
-		UGameInstance* GameInstance = World->GetGameInstance();
-
-		if (IsValid(GameInstance))
-			JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
+		this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 	}
 }
 
@@ -32,9 +30,9 @@ void ALobbyPlayerController::Server_CallUpdate_Implementation(const FLobbyPlayer
 {
 	PlayerSettings = PlayerInfo;
 
-	if (IsValid(LobbyGameMode)) {
-		LobbyGameMode->Server_SwapCharacter(this, PlayerSettings.HeroeSelected, PlayerSettings.bPlayerReadyState);
-		LobbyGameMode->Server_EveryoneUpdate();
+	if (IsValid(this->LobbyGameMode)) {
+		this->LobbyGameMode->Server_SwapCharacter(this, PlayerSettings.HeroeSelected, PlayerSettings.bPlayerReadyState);
+		this->LobbyGameMode->Server_EveryoneUpdate();
 	}
 }
 
@@ -42,8 +40,14 @@ void ALobbyPlayerController::Server_NotifyPlayerStatus_Implementation(const FLob
 {
 	PlayerSettings = PlayerInfo;
 
-	if (IsValid(LobbyGameMode))
-		LobbyGameMode->Server_EveryoneUpdate();
+	if (IsValid(this->LobbyGameMode))
+		this->LobbyGameMode->Server_EveryoneUpdate();
+}
+
+void ALobbyPlayerController::Server_FillContainerPlayerKickList_Implementation()
+{	
+	if (IsValid(this->LobbyGameMode))
+		this->LobbyGameMode->Server_FillContainerPlayerKickList();	
 }
 
 #pragma endregion Server
@@ -54,7 +58,7 @@ void ALobbyPlayerController::Client_SetupLobbyMenu_Implementation(const FString&
 {
 	if (!ensure(this->LobbyClass != nullptr)) return;
 
-	this->Lobby = CreateWidget<ULobby>(this, LobbyClass);
+	this->Lobby = CreateWidget<ULobby>(this, this->LobbyClass);
 	this->Lobby->SetServerName(ServerName);
 	this->Lobby->Setup();
 }
@@ -76,8 +80,8 @@ void ALobbyPlayerController::Client_UpdateNumberOfPlayers_Implementation(int32 C
 
 	FString CurrentAndMaxPlayersFormat = FString::Format(TEXT("{0}/{1} players"), CurrentAndMaxPlayers);
 
-	if (IsValid(LobbyGameMode))
-		this->Lobby->SetEnablePlayButton(LobbyGameMode->IsAllPlayerReady());
+	if (IsValid(this->LobbyGameMode))
+		this->Lobby->SetEnablePlayButton(this->LobbyGameMode->IsAllPlayerReady());
 
 	this->Lobby->SetCurrentPlayersFormat(CurrentAndMaxPlayersFormat);
 }
@@ -94,7 +98,7 @@ void ALobbyPlayerController::Client_AssignHeroeToPlayer_Implementation(TSubclass
 
 void ALobbyPlayerController::Client_ShowLoadingScreen_Implementation()
 {
-	this->JustAnotherLobbyGameInstance->ShowLoadingScreen(true);
+	this->JustAnotherLobbyGameInstance->ShowLoadingScreen(false, 3);
 }
 
 void ALobbyPlayerController::Client_SetViewTargetSpot_Implementation()
@@ -111,6 +115,18 @@ void ALobbyPlayerController::Client_SwitchToLobbyMode_Implementation()
 	this->Lobby->SetHiddenHeroesButton(false);
 
 	this->Lobby->ReadyButton->SetIsEnabled(true);
+}
+
+void ALobbyPlayerController::Client_FillContainerPlayerKickList_Implementation(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex)
+{
+	this->Lobby->FillContainerPlayerKickList(InPlayerNamesIndex);
+}
+
+void ALobbyPlayerController::Multi_UpdateReadyStatusInPlayerKickList_Implementation(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex)
+{
+	if (!IsValid(this->Lobby)) return;
+
+	this->Lobby->UpdateReadyStatusInPLayerKickList(InPlayerNamesIndex);
 }
 
 #pragma endregion Client

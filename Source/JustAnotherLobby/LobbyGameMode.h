@@ -56,6 +56,11 @@ public:
 	void Server_SetViewTargetSpot();
 	void Server_SetViewTargetSpot_Implementation();
 
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_FillContainerPlayerKickList();
+	void Server_FillContainerPlayerKickList_Implementation();
+	
+
 	FLobbyHeroeSpot* GetLobbyHeroeSpotByPlayerConnected(ALobbyPlayerController* LobbyPlayerController);
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
@@ -82,5 +87,6 @@ private:
 	void UpdateReadyStatus(ALobbyPlayerController* LobbyPlayerController);
 	void FillConnectedPlayers();
 	void SetPlayerInfoToTransfer();
+	TArray<FPlayerKickNameIndex> GetPlayerKickNameIndex();
 	class UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance;
 };

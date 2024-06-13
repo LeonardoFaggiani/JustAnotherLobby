@@ -8,14 +8,17 @@
 #include "Components/Image.h"
 #include "Components/Button.h"
 #include "Components/Overlay.h"
-#include "CommonButtonBase.h"
+#include "../Common/ButtonBase.h"
 #include "../Common/UserWidgetBase.h"
 #include "HeroeSelection.h"
+#include "PlayerKickList.h"
 #include "../../JustAnotherLobbyGameInstance.h"
 #include "../Struct/ConfigurationMaps.h"
 #include "../Struct/LobbyPlayerInfo.h"
+#include "../Struct/PlayerKickNameIndex.h"
 
 #include "Lobby.generated.h"
+
 
 /**
  * 
@@ -31,16 +34,21 @@ public:
 	class UOverlay* CharacterSelectionContainer;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UCommonButtonBase> ReadyButton;
+	TObjectPtr<UButtonBase> ReadyButton;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UCommonButtonBase> ReadyUpButton;
+	TObjectPtr<UButtonBase> ReadyUpButton;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UCommonButtonBase> HeroesButton;
+	TObjectPtr<UButtonBase> HeroesButton;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	TObjectPtr<UButtonBase> PlayerCountButton;
 
 	void SetCurrentPlayersFormat(FString InCurrentPlayersFormat);
 	void SetServerName(FString serverName);
+	void FillContainerPlayerKickList(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
+	void UpdateReadyStatusInPLayerKickList(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
 	void UpdateStatus();
 	void SetMap(UTexture2D* mapImage, FString mapName);
 	void ShowOrHideButton();
@@ -53,6 +61,9 @@ protected:
 
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UHeroeSelection> HeroeSelection;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	TObjectPtr<UPlayerKickList> PlayerKickList;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CurrentPlayersFormat;
@@ -77,6 +88,7 @@ protected:
 	UFUNCTION() void OnPreviousMapButtonClicked();
 	UFUNCTION() void OnNextMapButtonClicked();
 	UFUNCTION() void OnHeroesButtonClicked();
+	UFUNCTION() void OnPlayerCountButtonClicked();
 
 private:
 	void InitializeMap();
@@ -84,6 +96,7 @@ private:
 	FConfigurationMaps GetFirstOrLastMap(bool bIsFirst);
 	FConfigurationMaps* GetPreviousNextMap(bool IsIncrement);
 	void SetMapSelector(FConfigurationMaps* ConfigurationMaps);
+	
 
 	void NotifyMapChaged();
 	UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance;

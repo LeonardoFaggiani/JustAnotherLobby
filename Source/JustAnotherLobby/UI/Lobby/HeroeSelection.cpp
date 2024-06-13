@@ -3,6 +3,7 @@
 
 #include "HeroeSelection.h"
 #include "Components/HorizontalBoxSlot.h"
+#include "../../Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "../../LobbyPlayerController.h"
 
 bool UHeroeSelection::Initialize() {
@@ -10,16 +11,7 @@ bool UHeroeSelection::Initialize() {
     if (!Super::Initialize())
         return false;
 
-    UWorld* World = GetWorld();
-
-    if (IsValid(World))
-    {
-        UGameInstance* GameInstance = World->GetGameInstance();
-
-        if (IsValid(GameInstance)) {
-            JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
-        }
-    }
+    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
     if (BackButton)
         BackButton->OnClicked().AddUObject(this, &UHeroeSelection::OnBackButtonClicked);

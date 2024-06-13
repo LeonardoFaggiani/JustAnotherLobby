@@ -4,6 +4,8 @@
 #include "Options.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "../../../Library/JustAnotherLoobyBlueprintLibrary.h"
+#include <Kismet/GameplayStatics.h>
 
 bool UOptions::Initialize()
 {
@@ -28,16 +30,7 @@ bool UOptions::Initialize()
         BackButton->OnClicked().AddUObject(this, &UOptions::OnBackButtonClicked);
     }
 
-    UWorld* World = GetWorld();
-
-    if (IsValid(World))
-    {
-        UGameInstance* GameInstance = World->GetGameInstance();
-
-        if (IsValid(GameInstance))
-            JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
-
-    }
+    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
     this->InitializeSettings();
     this->InitializeScreenResolutionSupported();
@@ -145,7 +138,8 @@ void UOptions::OnBackButtonClicked()
         if (!this->GetIsOptionMenuInGame()) {
             this->JustAnotherLobbyGameInstance->SetBackToMainMenu(true);
             this->JustAnotherLobbyGameInstance->SetOptionsMenu(false);
-            this->JustAnotherLobbyGameInstance->OpenNextLevel("MainMenu", false, false, 0.1f);
+
+            UGameplayStatics::OpenLevel(GWorld, "MainMenu", true);
 
             return;
         }

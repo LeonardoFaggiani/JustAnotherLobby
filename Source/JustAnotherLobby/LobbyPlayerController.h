@@ -8,6 +8,7 @@
 #include "JustAnotherLobbyGameInstance.h"
 #include "UI/Struct/LobbyPlayerInfo.h"
 #include "UI/Struct/LobbyHeroeSpot.h"
+#include "UI/Struct/PlayerKickNameIndex.h"
 #include "UI/Lobby/Lobby.h"
 #include "UI/Lobby/HeroeSelection.h"
 #include "LobbyPlayerController.generated.h"
@@ -48,6 +49,10 @@ public:
 	void Server_NotifyPlayerStatus(const FLobbyPlayerInfo& PlayerInfo);
 	void Server_NotifyPlayerStatus_Implementation(const FLobbyPlayerInfo& PlayerInfo);
 
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_FillContainerPlayerKickList();
+	void Server_FillContainerPlayerKickList_Implementation();
+
 	UFUNCTION(BlueprintCallable, Client, Reliable)
 	void Client_SetupLobbyMenu(const FString& ServerName);
 	void Client_SetupLobbyMenu_Implementation(const FString& ServerName);
@@ -75,6 +80,14 @@ public:
 	UFUNCTION(BlueprintCallable, Client, Reliable)
 	void Client_SwitchToLobbyMode();
 	void Client_SwitchToLobbyMode_Implementation();
+
+	UFUNCTION(BlueprintCallable, Client, Reliable)
+	void Client_FillContainerPlayerKickList(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
+	void Client_FillContainerPlayerKickList_Implementation(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+	void Multi_UpdateReadyStatusInPlayerKickList(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
+	void Multi_UpdateReadyStatusInPlayerKickList_Implementation(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
 
 private:
 	class ULobby* Lobby;

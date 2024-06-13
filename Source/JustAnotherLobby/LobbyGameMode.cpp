@@ -4,6 +4,8 @@
 #include "LobbyGameMode.h"
 #include "JustAnotherLobbyPlayerState.h"
 #include "Net/UnrealNetwork.h"
+#include "Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "UI/Struct/PlayerKickNameIndex.h"
 #include "UI/Struct/InGamePlayerInfo.h"
 
 
@@ -11,16 +13,7 @@ ALobbyGameMode::ALobbyGameMode(const FObjectInitializer& ObjectInitializer) : Su
 {
 	PlayerControllerClass = ALobbyPlayerController::StaticClass();
 
-	UWorld* World = GetWorld();
-
-	if (IsValid(World))
-	{
-		UGameInstance* GameInstance = World->GetGameInstance();
-
-		if (IsValid(GameInstance)) {
-			this->JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
-		}
-	}
+	this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 }
 
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer) {
@@ -56,6 +49,8 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer) {
 
 				Server_EveryoneUpdate();
 
+				Server_FillContainerPlayerKickList();
+
 				FTimerHandle MemberTimerHandle;
 
 				GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, this, &ALobbyGameMode::Server_SetViewTargetSpot, 0.2f, false);
@@ -74,6 +69,7 @@ void ALobbyGameMode::Logout(AController* Exiting) {
 		this->AllPlayerControllers.Remove(LobbyPlayerController);
 
 	Server_EveryoneUpdate();
+	Server_FillContainerPlayerKickList();
 }
 
 bool ALobbyGameMode::IsAllPlayerReady()
@@ -153,6 +149,18 @@ void ALobbyGameMode::Server_EveryoneUpdate_Implementation()
 	}
 }
 
+void ALobbyGameMode::Server_FillContainerPlayerKickList_Implementation()
+{
+    if (this->AllPlayerControllers.Num() > 0)
+    {
+		TArray<FPlayerKickNameIndex> PlayerNamesIndex = GetPlayerKickNameIndex();      
+
+		for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers) {
+			PlayerController->Client_FillContainerPlayerKickList(PlayerNamesIndex);
+		}			   
+    }
+}
+
 void ALobbyGameMode::LaunchTheGame()
 {
 	UWorld* World = GetWorld();
@@ -226,6 +234,11 @@ void ALobbyGameMode::UpdateReadyStatus(ALobbyPlayerController* LobbyPlayerContro
 
 	if (IsValid(CharacterBase))
 		CharacterBase->Multi_SetReadyStatus(LobbyPlayerController->PlayerSettings.bPlayerReadyState);	
+
+	TArray<FPlayerKickNameIndex> PlayerNamesIndex = GetPlayerKickNameIndex();
+
+	for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers)
+		PlayerController->Multi_UpdateReadyStatusInPlayerKickList(PlayerNamesIndex);	
 }
 
 void ALobbyGameMode::FillConnectedPlayers()
@@ -251,6 +264,29 @@ void ALobbyGameMode::SetPlayerInfoToTransfer()
 
 		this->JustAnotherLobbyGameInstance->InGamePlayersInfo.Add(InGamePlayerInfo);
 	}
+}
+
+TArray<FPlayerKickNameIndex> ALobbyGameMode::GetPlayerKickNameIndex()
+{
+	TArray<FPlayerKickNameIndex> PlayerNamesIndex{};
+
+	for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers) {
+
+		AJustAnotherLobbyPlayerState* JustAnotherLobbyPlayerState = PlayerController->GetPlayerState<AJustAnotherLobbyPlayerState>();
+
+		if (IsValid(JustAnotherLobbyPlayerState)) {
+
+			FPlayerKickNameIndex PlayerKickNameIndex;
+
+			PlayerKickNameIndex.Name = FText::FromString(JustAnotherLobbyPlayerState->GetPlayerName());
+			PlayerKickNameIndex.Index = this->AllPlayerControllers.Find(PlayerController);
+			PlayerKickNameIndex.IsReady = PlayerController->PlayerSettings.bPlayerReadyState;
+
+			PlayerNamesIndex.Add(PlayerKickNameIndex);
+		}
+	}
+
+	return PlayerNamesIndex;
 }
 
 FLobbyHeroeSpot* ALobbyGameMode::GetLobbyHeroeSpotByPlayerConnected(ALobbyPlayerController* LobbyPlayerController)

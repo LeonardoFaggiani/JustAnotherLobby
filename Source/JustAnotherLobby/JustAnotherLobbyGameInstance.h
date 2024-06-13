@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "UI/LoadingScreen/LoadingScreen.h"
 #include "UI/MainMenu/MainMenu.h"
 #include "./UI/Struct/Heroes.h"
 #include "./UI/Struct/ConfigurationMaps.h"
 #include "./UI/Struct/LobbyHeroeSpot.h"
-#include "./UI/LoadingScreen/LoadingScreen.h"
 #include <MoviePlayer/Public/MoviePlayer.h>
 #include "UI/Struct/InGamePlayerInfo.h"
 
@@ -27,11 +25,6 @@ class JUSTANOTHERLOBBY_API UJustAnotherLobbyGameInstance : public UGameInstance
 public:
     
     UJustAnotherLobbyGameInstance(const FObjectInitializer& ObjectInitializer);
-
-    void Init() override;
-    
-    void OnLevelRemovedFromWorld(ULevel* InLevel, UWorld* InWorld);
-
 
     /* Main Menu */
 
@@ -70,20 +63,11 @@ public:
 
     /* Loading Screen */
 
-    UPROPERTY(EditAnyWhere)
-    TSubclassOf<ULoadingScreen> LoadingScreenClass;
-
-    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Loading Screen")
-    void BeginLoadingScreen(const FString& MapName);
-
-    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Loading Screen")
-    void EndLoadingScreen(UWorld* InLoadedWorld);
+    UFUNCTION(BlueprintCallable)
+    void ShowLoadingScreen(bool bPlayUntilStopped, float PlayTime);
 
     UFUNCTION(BlueprintCallable)
-    void ShowLoadingScreen(bool bWithTransition);
-
-    UFUNCTION(BlueprintCallable)
-    void HideLoadingScreen(bool bWithTransition);
+    void HideLoadingScreen();
 
     /* End Loading Screen */
 
@@ -98,6 +82,8 @@ public:
     UPROPERTY(EditAnyWhere)
     TArray<FHeroes> Heroes;
     TArray<FInGamePlayerInfo> InGamePlayersInfo;
+    UPROPERTY(EditAnyWhere)
+    UTexture2D* LoadingScreenImage;
 
     UPROPERTY(EditAnyWhere)
     TMap<FString, FConfigurationMaps> ConfigurationMaps;
@@ -113,9 +99,6 @@ public:
 
     UFUNCTION(BlueprintCallable)
     void StopEnviromentMusic();
-
-    UFUNCTION(BlueprintCallable)
-    void OpenNextLevel(FName InLevel, bool bIsListen, bool bShowLoading, float InOpenLevelDelay);
 
     UFUNCTION(BlueprintCallable)
     bool GetIsFirstTimeLoading();
@@ -140,12 +123,7 @@ private:
     UPROPERTY()
     bool bIsFirstTimeLoading{ true };
     UPROPERTY()
-    ULoadingScreen* LoadingScreen;
-    UPROPERTY()
     UAudioComponent* Music;
-
-    UFUNCTION()
-    void OpenLevelWithDelay(FName InLevelName, FString InListen);
 
     class UMainMenu* Menu;
     FLoadingScreenAttributes LoadingScreenAttributes;

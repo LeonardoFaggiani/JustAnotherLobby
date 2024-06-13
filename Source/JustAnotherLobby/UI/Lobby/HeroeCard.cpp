@@ -5,6 +5,7 @@
 #include "../../LobbyPlayerController.h"
 #include "Components/HorizontalBoxSlot.h"
 #include "Kismet/GameplayStatics.h"
+#include "../../Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "../../JustAnotherLobbyGameInstance.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
@@ -26,18 +27,13 @@ void UHeroeCard::SetHeroeSelected()
 
         if (IsValid(World))
         {
-            UGameInstance* GameInstance = World->GetGameInstance();
-
-            if (IsValid(GameInstance))
-            {
-                this->SetIsEnabled(false);
-
-                UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
-
-                TSubclassOf<ACharacterBase> CharacterBase = JustAnotherLobbyGameInstance->GetHeroeByName(this->HeroeName->GetText().ToString());
-
-                LobbyPlayerController->Client_AssignHeroeToPlayer(CharacterBase);
-            }
+            this->SetIsEnabled(false);
+            
+            UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
+            
+            TSubclassOf<ACharacterBase> CharacterBase = JustAnotherLobbyGameInstance->GetHeroeByName(this->HeroeName->GetText().ToString());
+            
+            LobbyPlayerController->Client_AssignHeroeToPlayer(CharacterBase);            
         }
     }
 }

@@ -6,6 +6,7 @@
 #include "InputAction.h"
 #include "Kismet/GameplayStatics.h"
 #include "InputTriggers.h"
+#include "Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameModes/InGameGameMode.h"
@@ -21,10 +22,7 @@ AInGamePlayerController::AInGamePlayerController(const FObjectInitializer& Objec
         if (IsValid(GameMode))
             InGameGameMode = Cast<AInGameGameMode>(GameMode);
 
-        UGameInstance* GameInstance = World->GetGameInstance();
-
-        if (IsValid(GameInstance))
-            this->JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
+        this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
     }
 }
 
@@ -71,7 +69,7 @@ void AInGamePlayerController::ShowInGameMenu(const FInputActionValue& Value)
 
 void AInGamePlayerController::Client_ShowLoadingScreen_Implementation()
 {
-    this->JustAnotherLobbyGameInstance->ShowLoadingScreen(true);
+    this->JustAnotherLobbyGameInstance->ShowLoadingScreen(true, 3);
 }
 
 void AInGamePlayerController::HideInGameMenu()

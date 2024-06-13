@@ -6,6 +6,7 @@
 #include "Net/UnrealNetwork.h"
 #include "../../LobbyGameMode.h"
 #include "../../LobbyPlayerController.h"
+#include "../../Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 bool ULobby::Initialize()
@@ -15,8 +16,9 @@ bool ULobby::Initialize()
 
     UGameInstance* GameInstance = GetGameInstance();
 
-    if (GameInstance) {
-        this->JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
+    if (IsValid(GameInstance)) {
+
+        this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
         AGameModeBase* GameMode = UGameplayStatics::GetGameMode(GameInstance->GetWorld());
 
@@ -29,11 +31,12 @@ bool ULobby::Initialize()
         }
     }
 
-    if (this->ReadyButton && this->ReadyUpButton && this->PreviousMap && this->NextMap && this->HeroesButton) {
+    if (this->ReadyButton && this->ReadyUpButton && this->PreviousMap && this->NextMap && this->HeroesButton && this->PlayerCountButton) {
 
         this->ReadyUpButton->OnClicked().AddUObject(this, &ThisClass::OnPlayButtonClicked);
         this->ReadyButton->OnClicked().AddUObject(this, &ThisClass::OnReadyButtonClicked);
         this->HeroesButton->OnClicked().AddUObject(this, &ThisClass::OnHeroesButtonClicked);
+        this->PlayerCountButton->OnClicked().AddUObject(this, &ThisClass::OnPlayerCountButtonClicked);
 
         this->PreviousMap->OnClicked.AddDynamic(this, &ULobby::OnPreviousMapButtonClicked);
         this->NextMap->OnClicked.AddDynamic(this, &ULobby::OnNextMapButtonClicked);
@@ -96,6 +99,24 @@ void ULobby::OnHeroesButtonClicked()
 void ULobby::OnReadyButtonClicked()
 {
     UpdateStatus();
+}
+
+void ULobby::OnPlayerCountButtonClicked()
+{
+    if (!IsValid(this->PlayerKickList))
+        return;
+
+    if (this->PlayerKickList->GetVisibility() == ESlateVisibility::Visible) {
+        this->PlayerKickList->SetVisibility(ESlateVisibility::Hidden);
+    }
+    else {
+
+        ALobbyPlayerController* CurrentPlayerController = Cast<ALobbyPlayerController>(this->GetOwningPlayer());
+
+        CurrentPlayerController->Server_FillContainerPlayerKickList();
+
+        this->PlayerKickList->SetVisibility(ESlateVisibility::Visible);
+    }
 }
 
 void ULobby::UpdateStatus()
@@ -238,6 +259,16 @@ void ULobby::SetMapSelector(FConfigurationMaps* ConfigurationMaps)
     }
 }
 
+void ULobby::FillContainerPlayerKickList(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex)
+{
+    this->PlayerKickList->FillPlayerKickContainer(InPlayerNamesIndex);
+}
+
+void ULobby::UpdateReadyStatusInPLayerKickList(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex)
+{
+    this->PlayerKickList->SetReadyStatus(InPlayerNamesIndex);
+}
+
 void ULobby::NotifyMapChaged() {
     this->LobbyGameMode->Server_UpdateGameSettings(this->CurrentTextureMap, this->MapName->GetText().ToString());
 }
@@ -246,6 +277,7 @@ void ULobby::NotifyMapChaged() {
 
 void ULobby::SetCurrentPlayersFormat(FString InCurrentPlayersFormat) {
     this->CurrentPlayersFormat->SetText(FText::FromString(InCurrentPlayersFormat));
+    this->PlayerCountButton->SetText(FText::FromString(InCurrentPlayersFormat));
 }
 
 void ULobby::SetMap(UTexture2D* mapImage, FString mapName) {

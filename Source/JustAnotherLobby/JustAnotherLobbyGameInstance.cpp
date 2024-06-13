@@ -4,47 +4,15 @@
 #include "JustAnotherLobbyGameInstance.h"
 #include "TimerManager.h"
 #include "Runtime/UMG/Public/UMG.h"
+#include "JustAnotherLobbyLoadingScreen.h"
 #include "Net/UnrealNetwork.h"
+#include "MoviePlayer.h"
 #include <Kismet/GameplayStatics.h>
 
 UJustAnotherLobbyGameInstance::UJustAnotherLobbyGameInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 
 }
-
-void UJustAnotherLobbyGameInstance::Init()
-{
-    Super::Init();
-
-    FWorldDelegates::LevelRemovedFromWorld.AddUObject(this, &ThisClass::OnLevelRemovedFromWorld);
-    FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &UJustAnotherLobbyGameInstance::BeginLoadingScreen);
-    FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UJustAnotherLobbyGameInstance::EndLoadingScreen);
-
-    if (!ensure(this->LoadingScreenClass != nullptr)) return;
-
-    this->LoadingScreen = CreateWidget<ULoadingScreen>(this, LoadingScreenClass);
-
-    this->LoadingScreenAttributes.MinimumLoadingScreenDisplayTime = 5;
-    this->LoadingScreenAttributes.bAutoCompleteWhenLoadingCompletes = true;
-    this->LoadingScreenAttributes.bMoviesAreSkippable = false;
-    this->LoadingScreenAttributes.bWaitForManualStop = true;
-    this->LoadingScreenAttributes.bAllowEngineTick = true;
-    this->LoadingScreenAttributes.WidgetLoadingScreen = this->LoadingScreen->TakeWidget();
-}
-
-void UJustAnotherLobbyGameInstance::OnLevelRemovedFromWorld(ULevel* InLevel, UWorld* InWorld) {
-
-    if (InLevel == nullptr) {
-        if (InWorld->GetFName() == FName("MainMenuWidgets"))
-        {
-            if (this->LoadingScreen->IsInViewport()) {
-
-                this->LoadingScreen->TransBounceInCompleted();
-            }
-        }
-    }
-}
-
 
 UMainMenu* UJustAnotherLobbyGameInstance::LoadMenu()
 {
@@ -98,51 +66,22 @@ bool UJustAnotherLobbyGameInstance::GetBackToMainMenu()
     return this->bIsBackToMainMenu;
 }
 
-
-
-void UJustAnotherLobbyGameInstance::BeginLoadingScreen_Implementation(const FString& InMapName)
+void UJustAnotherLobbyGameInstance::ShowLoadingScreen(bool bPlayUntilStopped, float PlayTime)
 {
-    if (InMapName == "/Game/Maps/Lobby")
-    {
-        if (this->LoadingScreen->IsInViewport()) {
-            this->LoadingScreen->TransBounceInCompleted();
-        }
-    }
+    FLoadingScreenAttributes LoadingScreen;
+
+    LoadingScreen.bAutoCompleteWhenLoadingCompletes = !bPlayUntilStopped;
+    LoadingScreen.bWaitForManualStop = bPlayUntilStopped;
+    LoadingScreen.bAllowEngineTick = bPlayUntilStopped;
+    LoadingScreen.MinimumLoadingScreenDisplayTime = PlayTime;
+    LoadingScreen.WidgetLoadingScreen = SNew(SJustAnotherLobbyLoadingScreen).Image(LoadingScreenImage);
+
+    GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
 }
 
-void UJustAnotherLobbyGameInstance::EndLoadingScreen_Implementation(UWorld* InLoadedWorld)
+void UJustAnotherLobbyGameInstance::HideLoadingScreen()
 {
-    if (InLoadedWorld->GetName() == "Lobby")
-    {
-        if (!this->LoadingScreen->IsInViewport()) {
-            this->ShowLoadingScreen(false);
-        }
-    }
-}
-
-void UJustAnotherLobbyGameInstance::ShowLoadingScreen(bool bWithTransition)
-{
-    UE_LOG(LogTemp, Warning, TEXT("ShowLoadingScreen OK!"));
-
-    if (!ensure(this->LoadingScreen != nullptr)) return;
-
-    if (!this->LoadingScreen->IsInViewport()) {
-        this->LoadingScreen->Setup(1);
-    }
-
-    bWithTransition ? this->LoadingScreen->TransBounceIn() : this->LoadingScreen->TransBounceInCompleted();
-}
-
-void UJustAnotherLobbyGameInstance::HideLoadingScreen(bool bWithTransition)
-{
-    UE_LOG(LogTemp, Warning, TEXT("HideLoadingScreen OK!"));
-
-    if (!ensure(this->LoadingScreen != nullptr)) return;
-
-    if (!this->LoadingScreen->IsInViewport())
-        this->LoadingScreen->Setup();
-
-    this->LoadingScreen->TransBounceOut();
+    GetMoviePlayer()->StopMovie();
 }
 
 void UJustAnotherLobbyGameInstance::SetHostSettings(int32 InNumberOfPlayers, FString InServerName) {
@@ -152,7 +91,7 @@ void UJustAnotherLobbyGameInstance::SetHostSettings(int32 InNumberOfPlayers, FSt
 
 void UJustAnotherLobbyGameInstance::PlayEnviromentMusic(USoundBase* Audio, float Volume, bool bIsPersistLevel)
 {
-    if (!ensure(Audio != nullptr)) return;
+    if (!IsValid(Audio)) return;
 
     this->Music = UGameplayStatics::CreateSound2D(GetWorld(), Audio, Volume, 1, 0, nullptr, bIsPersistLevel, true);
 
@@ -161,34 +100,9 @@ void UJustAnotherLobbyGameInstance::PlayEnviromentMusic(USoundBase* Audio, float
 
 void UJustAnotherLobbyGameInstance::StopEnviromentMusic()
 {
-    if (!ensure(this->Music != nullptr)) return;
+    if (!IsValid(this->Music)) return;
 
     this->Music->Stop();
-}
-
-void UJustAnotherLobbyGameInstance::OpenNextLevel(FName InLevel, bool bIsListen, bool bShowLoading, float InOpenLevelDelay)
-{
-    UWorld* World = GetWorld();
-
-    if (World) {
-
-        if (bShowLoading)
-            this->ShowLoadingScreen(true);
-
-        FTimerHandle MemberTimerHandle;
-        FTimerDelegate TimerDel;
-
-        FString ListenLevel = bIsListen ? "listen" : "";
-
-        TimerDel.BindUFunction(this, FName("OpenLevelWithDelay"), InLevel, ListenLevel);
-
-        GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, TimerDel, InOpenLevelDelay, false);
-    }
-}
-
-void UJustAnotherLobbyGameInstance::OpenLevelWithDelay(FName InLevelName, FString InListen)
-{
-    UGameplayStatics::OpenLevel(GWorld, InLevelName, true, InListen);
 }
 
 bool UJustAnotherLobbyGameInstance::GetIsFirstTimeLoading()
@@ -211,7 +125,6 @@ TSubclassOf<ACharacterBase> UJustAnotherLobbyGameInstance::GetHeroeByName(FStrin
 
     return InHeroeResource->TargetClass;
 }
-
 
 void UJustAnotherLobbyGameInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

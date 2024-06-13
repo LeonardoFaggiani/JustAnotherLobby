@@ -13,6 +13,15 @@
 				"UMG",
 				"CommonUI"
 			]
+		},
+		{
+			"Name": "JustAnotherLobbyLoadingScreen",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Slate",
+				"SlateCore"
+			]
 		}
 	],
 	"Plugins": [

@@ -3,6 +3,8 @@
 
 #include "MainMenu.h"
 #include "../../JustAnotherLobbyGameInstance.h"
+#include "../../Library/JustAnotherLoobyBlueprintLibrary.h"
+#include <Kismet/GameplayStatics.h>
 
 bool UMainMenu::Initialize()
 {
@@ -16,15 +18,7 @@ bool UMainMenu::Initialize()
         ExitButton->OnClicked().AddUObject(this, &ThisClass::OnExitButtonClicked);
     }
 
-    UWorld* World = GetWorld();
-
-    if (IsValid(World))
-    {
-        UGameInstance* GameInstance = World->GetGameInstance();
-
-        if (IsValid(GameInstance))
-            this->JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
-    }
+    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
     return true;
 }
@@ -42,7 +36,7 @@ void UMainMenu::OnHostButtonClicked()
     this->JustAnotherLobbyGameInstance->SetFindGames(false);
     this->JustAnotherLobbyGameInstance->SetOptionsMenu(false);
 
-    this->JustAnotherLobbyGameInstance->OpenNextLevel(FName("MainMenuWidgets"), false, false, 0.1f);
+    UGameplayStatics::OpenLevel(GWorld, "MainMenuWidgets", true);
 }
 
 void UMainMenu::OnFindGamesButtonClicked()
@@ -51,7 +45,7 @@ void UMainMenu::OnFindGamesButtonClicked()
     this->JustAnotherLobbyGameInstance->SetHostGame(false);
     this->JustAnotherLobbyGameInstance->SetOptionsMenu(false);
 
-    this->JustAnotherLobbyGameInstance->OpenNextLevel(FName("MainMenuWidgets"), false, false, 0.1f);
+    UGameplayStatics::OpenLevel(GWorld, "MainMenuWidgets", true);
 }
 
 void UMainMenu::OnOptionsButtonButtonClicked()
@@ -60,7 +54,7 @@ void UMainMenu::OnOptionsButtonButtonClicked()
     this->JustAnotherLobbyGameInstance->SetHostGame(false);
     this->JustAnotherLobbyGameInstance->SetFindGames(false);
 
-    this->JustAnotherLobbyGameInstance->OpenNextLevel(FName("MainMenuWidgets"), false, false, 0.1f);
+    UGameplayStatics::OpenLevel(GWorld, "MainMenuWidgets", true);
 }
 
 void UMainMenu::OnExitButtonClicked() {
