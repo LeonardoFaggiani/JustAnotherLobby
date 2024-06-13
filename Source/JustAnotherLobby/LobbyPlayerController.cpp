@@ -98,7 +98,7 @@ void ALobbyPlayerController::Client_AssignHeroeToPlayer_Implementation(TSubclass
 
 void ALobbyPlayerController::Client_ShowLoadingScreen_Implementation()
 {
-	this->JustAnotherLobbyGameInstance->ShowLoadingScreen(false, 3);
+	UJustAnotherLoobyBlueprintLibrary::ShowLoadingScreen(this, false, 3);
 }
 
 void ALobbyPlayerController::Client_SetViewTargetSpot_Implementation()

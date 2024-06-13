@@ -169,8 +169,7 @@ void ALobbyGameMode::LaunchTheGame()
 
 	FString MapToTravel = FString::Format(*FullMapPath, { MapName });
 
-	if (World) {
-		//bUseSeamlessTravel = true;	
+	if (World) {		
 		this->SetPlayerInfoToTransfer();
 		World->ServerTravel(FString(MapToTravel));
 	}
