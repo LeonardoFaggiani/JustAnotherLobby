@@ -28,6 +28,8 @@ public:
 
 	void SetCurrentCharacter(ACharacterBase* InCurrentCharacter);
 	ACharacterBase* GetCurrentCharacter();
+	void SetSubclassHeroeSelected(TSubclassOf<ACharacterBase> InSubclassHeroeSelected);
+	TSubclassOf<ACharacterBase> GetSubclassHeroeSelected();
 	void SetLobbyHeroeSpot(const FLobbyHeroeSpot& InLobbyHeroeSpot);
 	FLobbyHeroeSpot GetLobbyHeroeSpot();
 	void SetPlayerIndex(int32 InIndex);
@@ -97,4 +99,5 @@ private:
 	AActor* ViewTarget;
 	AActor* GetActorByName(FString InActorName);	
 	ACharacterBase* CurrentCharacter;
+	TSubclassOf<ACharacterBase> SubclassHeroeSelected;
 };

@@ -1,8 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
-//
-//#include "ModuleInterface.h"
+
 #include "Modules/ModuleManager.h"
 
 /** Module interface for this game's loading screens */
@@ -14,4 +13,12 @@ public:
 	{
 		return FModuleManager::LoadModuleChecked<IJustAnotherLobbyLoadingScreenModule>("JustAnotherLobbyLoadingScreen");
 	}
+
+	/** Show the loading screen */
+	virtual void ShowLoadingScreen(bool bPlayUntilStopped, float PlayTime) = 0;
+
+	/** Stops the loading screen */
+	virtual void HideLoadingScreen() = 0;
+
+	UTexture2D* LoadingScreenImage;
 };

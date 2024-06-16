@@ -24,8 +24,8 @@ public:
 	ALobbyGameMode(const FObjectInitializer& ObjectInitializer);
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
-	void LaunchTheGame();
 
+	UFUNCTION(BlueprintCallable)
 	bool IsAllPlayerReady();
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
@@ -59,6 +59,14 @@ public:
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void Server_FillContainerPlayerKickList();
 	void Server_FillContainerPlayerKickList_Implementation();
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_LaunchTheGame();
+	void Server_LaunchTheGame_Implementation();
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_ShouldHideLoadingScreen(ALobbyPlayerController* LobbyPlayerController);
+	void Server_ShouldHideLoadingScreen_Implementation(ALobbyPlayerController* LobbyPlayerController);
 	
 
 	FLobbyHeroeSpot* GetLobbyHeroeSpotByPlayerConnected(ALobbyPlayerController* LobbyPlayerController);
@@ -75,7 +83,6 @@ public:
 		int32 CurrentPlayers;
 	UPROPERTY(Replicated)
 		int32 MaxPlayers;
-		TSubclassOf<ACharacterBase> HeroeDefault;
 	UPROPERTY(EditAnyWhere)
 		TSubclassOf<ALobbyPlayerSpots> LobbyPlayerSpotClass;
 

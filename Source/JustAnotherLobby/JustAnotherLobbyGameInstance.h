@@ -60,18 +60,6 @@ public:
 
     /* End Main Menu */
 
-
-    /* Loading Screen */
-
-    UFUNCTION(BlueprintCallable)
-    void ShowLoadingScreen(bool bPlayUntilStopped, float PlayTime);
-
-    UFUNCTION(BlueprintCallable)
-    void HideLoadingScreen();
-
-    /* End Loading Screen */
-
-
     /* General Settings */
 
     UPROPERTY(Replicated)

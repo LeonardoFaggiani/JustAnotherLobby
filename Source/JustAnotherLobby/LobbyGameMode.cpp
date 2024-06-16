@@ -8,11 +8,9 @@
 #include "UI/Struct/PlayerKickNameIndex.h"
 #include "UI/Struct/InGamePlayerInfo.h"
 
-
 ALobbyGameMode::ALobbyGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	PlayerControllerClass = ALobbyPlayerController::StaticClass();
-
 	this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 }
 
@@ -85,14 +83,15 @@ bool ALobbyGameMode::IsAllPlayerReady()
 
 void ALobbyGameMode::Server_SwapCharacter_Implementation(APlayerController* PlayerController, TSubclassOf<ACharacterBase> InHeroeSelected, bool bChangeStatus)
 {
-	if (!bChangeStatus) {
+    if (!bChangeStatus) {
 
-		ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(PlayerController);
+        ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(PlayerController);
 
-		this->HeroeDefault = InHeroeSelected;
+        LobbyPlayerController->SetCurrentCharacter(InHeroeSelected.GetDefaultObject());
+        LobbyPlayerController->SetSubclassHeroeSelected(InHeroeSelected);
 
-		this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
-	}
+        this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
+    }
 }
 
 void ALobbyGameMode::Server_UpdateGameSettings_Implementation(UTexture2D* mapImage, const FString& mapName)
@@ -161,7 +160,7 @@ void ALobbyGameMode::Server_FillContainerPlayerKickList_Implementation()
     }
 }
 
-void ALobbyGameMode::LaunchTheGame()
+void ALobbyGameMode::Server_LaunchTheGame_Implementation()
 {
 	UWorld* World = GetWorld();
 
@@ -179,7 +178,7 @@ void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPla
 {
 	FLobbyHeroeSpot* LobbyHeroeSpotByIndex = this->GetLobbyHeroeSpotByPlayerConnected(LobbyPlayerController);
 
-	if (!IsValid(this->HeroeDefault))
+	if (!IsValid(LobbyPlayerController->GetSubclassHeroeSelected()))
 		return;
 
 	FActorSpawnParameters params;
@@ -188,11 +187,13 @@ void ALobbyGameMode::SpawnCharacterOnPlayerSpot(ALobbyPlayerController* LobbyPla
 
 	if (LobbyHeroeSpotByIndex != nullptr)
 	{
-		ACharacterBase* SpawnCharacter = Cast<ACharacterBase>(GetWorld()->SpawnActor<ACharacterBase>(this->HeroeDefault, LobbyHeroeSpotByIndex->LocationHeroe.Location, LobbyHeroeSpotByIndex->LocationHeroe.Rotation, params));
-		SpawnCharacter->Multi_PlayStartLevelMontage();
+		ACharacterBase* SpawnCharacter = Cast<ACharacterBase>(GetWorld()->SpawnActor<ACharacterBase>(LobbyPlayerController->GetSubclassHeroeSelected(), LobbyHeroeSpotByIndex->LocationHeroe.Location, LobbyHeroeSpotByIndex->LocationHeroe.Rotation, params));
 
 		LobbyPlayerController->SetCurrentCharacter(SpawnCharacter);
-		LobbyPlayerController->PlayerSettings.HeroeSelected = this->HeroeDefault;		
+
+		SpawnCharacter->Multi_PlayStartLevelMontage();
+
+		LobbyPlayerController->PlayerSettings.HeroeSelected = LobbyPlayerController->GetSubclassHeroeSelected();
 	}
 
 	this->UpdatePlayerName(LobbyPlayerController);
@@ -212,6 +213,14 @@ void ALobbyGameMode::Server_RespawnPlayer_Implementation(ALobbyPlayerController*
 {
 	this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
 }
+
+void ALobbyGameMode::Server_ShouldHideLoadingScreen_Implementation(ALobbyPlayerController* LobbyPlayerController)
+{
+    if (this->AllPlayerControllers.Contains(LobbyPlayerController)) {
+        UJustAnotherLoobyBlueprintLibrary::HideLoadingScreen(this);
+    }
+}
+
 
 void ALobbyGameMode::UpdatePlayerName(ALobbyPlayerController* LobbyPlayerController)
 {

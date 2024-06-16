@@ -66,24 +66,6 @@ bool UJustAnotherLobbyGameInstance::GetBackToMainMenu()
     return this->bIsBackToMainMenu;
 }
 
-void UJustAnotherLobbyGameInstance::ShowLoadingScreen(bool bPlayUntilStopped, float PlayTime)
-{
-    FLoadingScreenAttributes LoadingScreen;
-
-    LoadingScreen.bAutoCompleteWhenLoadingCompletes = !bPlayUntilStopped;
-    LoadingScreen.bWaitForManualStop = bPlayUntilStopped;
-    LoadingScreen.bAllowEngineTick = bPlayUntilStopped;
-    LoadingScreen.MinimumLoadingScreenDisplayTime = PlayTime;
-    LoadingScreen.WidgetLoadingScreen = SNew(SJustAnotherLobbyLoadingScreen).Image(LoadingScreenImage);
-
-    GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
-}
-
-void UJustAnotherLobbyGameInstance::HideLoadingScreen()
-{
-    GetMoviePlayer()->StopMovie();
-}
-
 void UJustAnotherLobbyGameInstance::SetHostSettings(int32 InNumberOfPlayers, FString InServerName) {
     this->MaxPlayers = InNumberOfPlayers;
     this->ServerName = InServerName;

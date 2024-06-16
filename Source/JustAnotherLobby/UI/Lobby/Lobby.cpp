@@ -14,24 +14,17 @@ bool ULobby::Initialize()
     if (!Super::Initialize())
         return false;
 
-    UGameInstance* GameInstance = GetGameInstance();
+    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
-    if (IsValid(GameInstance)) {
+    ALobbyGameMode* lobbyGameMode = UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(this);
 
-        this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
-
-        AGameModeBase* GameMode = UGameplayStatics::GetGameMode(GameInstance->GetWorld());
-
-        ALobbyGameMode* lobbyGameMode = Cast<ALobbyGameMode>(GameMode);
-
-        if (lobbyGameMode != nullptr) {
-            this->LobbyGameMode = lobbyGameMode;
-
-            this->InitializeMap();
-        }
+    if (IsValid(lobbyGameMode)) {
+        this->LobbyGameMode = lobbyGameMode;
+        this->InitializeMap();
     }
 
-    if (this->ReadyButton && this->ReadyUpButton && this->PreviousMap && this->NextMap && this->HeroesButton && this->PlayerCountButton) {
+
+    if (this->ReadyUpButton && this->ReadyButton && this->PreviousMap && this->NextMap && this->HeroesButton && this->PlayerCountButton) {
 
         this->ReadyUpButton->OnClicked().AddUObject(this, &ThisClass::OnPlayButtonClicked);
         this->ReadyButton->OnClicked().AddUObject(this, &ThisClass::OnReadyButtonClicked);
@@ -53,14 +46,9 @@ void ULobby::SetServerName(FString serverName) {
 
 void ULobby::ShowOrHideButton() {
 
-    UWorld* World = GetWorld();
+    if (this->ReadyButton && this->PreviousMap && this->NextMap) {
 
-    if (World == nullptr)
-        return;
-
-    if (this->ReadyUpButton && this->ReadyButton && this->PreviousMap && this->NextMap) {
-
-        if (!GetWorld()->IsServer()) {
+        if (!UJustAnotherLoobyBlueprintLibrary::IsServer(this)) {
             this->ReadyUpButton->SetVisibility(ESlateVisibility::Hidden);
             this->ReadyButton->SetVisibility(ESlateVisibility::Visible);
 
@@ -81,7 +69,7 @@ void ULobby::OnPlayButtonClicked()
         for (ALobbyPlayerController* PlayerController : this->LobbyGameMode->AllPlayerControllers)
             PlayerController->Client_ShowLoadingScreen();
 
-        this->LobbyGameMode->LaunchTheGame();
+        this->LobbyGameMode->Server_LaunchTheGame();
     }
 }
 
@@ -130,6 +118,9 @@ void ULobby::UpdateStatus()
         LobbyPlayerController->Server_NotifyPlayerStatus(LobbyPlayerController->PlayerSettings);
 
         this->HeroesButton->SetIsEnabled(!LobbyPlayerController->PlayerSettings.bPlayerReadyState);
+        
+        if (IsValid(this->LobbyGameMode))
+            this->ReadyUpButton->SetIsEnabled(this->LobbyGameMode->IsAllPlayerReady());        
     }
 }
 
@@ -167,9 +158,8 @@ void ULobby::InitializeMap()
 
     this->SetMap(Texture, FConfigurationMaps.Name);
     this->PreviousMap->SetIsEnabled(false);
-
-    if (GetWorld()->IsServer())
-        this->NotifyMapChaged();
+    
+    this->NotifyMapChaged();
 }
 
 FConfigurationMaps* ULobby::GetCurrentMapByName(FString Name)
@@ -270,7 +260,9 @@ void ULobby::UpdateReadyStatusInPLayerKickList(const TArray<FPlayerKickNameIndex
 }
 
 void ULobby::NotifyMapChaged() {
-    this->LobbyGameMode->Server_UpdateGameSettings(this->CurrentTextureMap, this->MapName->GetText().ToString());
+
+    if (IsValid(this->LobbyGameMode))
+        this->LobbyGameMode->Server_UpdateGameSettings(this->CurrentTextureMap, this->MapName->GetText().ToString());
 }
 
 #pragma endregion Map

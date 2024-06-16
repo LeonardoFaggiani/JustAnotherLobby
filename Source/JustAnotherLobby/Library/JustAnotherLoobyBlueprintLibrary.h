@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "../JustAnotherLobbyGameInstance.h"
+#include "../LobbyGameMode.h"
 
 #include "JustAnotherLoobyBlueprintLibrary.generated.h"
 
@@ -29,6 +30,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Game Instance", meta = (WorldContext = "WorldContextObject"))
 	static UJustAnotherLobbyGameInstance* GetJustAnotherLobbyGameInstance(const UObject* WorldContextObject);
 
+	UFUNCTION(BlueprintPure, Category = "Game Mode", meta = (WorldContext = "WorldContextObject"))
+	static ALobbyGameMode* GetLobbyGameMode(const UObject* WorldContextObject);
+
 	UFUNCTION(BlueprintCallable, Category = "UI", meta = (WorldContext = "WorldContextObject"))
 	static UUserWidget* CreateAndShowWidget(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool bShowMouseCursor);
+
+	UFUNCTION(BlueprintCallable, Category = "Common", meta = (WorldContext = "WorldContextObject"))
+	static bool IsServer(UObject* WorldContextObject);
 };

@@ -69,7 +69,7 @@ void AInGamePlayerController::ShowInGameMenu(const FInputActionValue& Value)
 
 void AInGamePlayerController::Client_ShowLoadingScreen_Implementation()
 {
-    this->JustAnotherLobbyGameInstance->ShowLoadingScreen(true, 3);
+    UJustAnotherLoobyBlueprintLibrary::ShowLoadingScreen(this, true, 3);
 }
 
 void AInGamePlayerController::HideInGameMenu()

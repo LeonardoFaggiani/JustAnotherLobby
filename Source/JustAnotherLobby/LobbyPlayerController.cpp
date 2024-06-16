@@ -7,6 +7,7 @@
 #include "./UI/Lobby/OverheadPlayerSpot.h"
 #include "Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "Components/Widget.h"
+#include "Common/FLogJustAnotherLobby.h"
 #include "Net/UnrealNetwork.h"
 
 ALobbyPlayerController::ALobbyPlayerController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -98,7 +99,7 @@ void ALobbyPlayerController::Client_AssignHeroeToPlayer_Implementation(TSubclass
 
 void ALobbyPlayerController::Client_ShowLoadingScreen_Implementation()
 {
-	UJustAnotherLoobyBlueprintLibrary::ShowLoadingScreen(this, false, 3);
+	UJustAnotherLoobyBlueprintLibrary::ShowLoadingScreen(this, true, 3);
 }
 
 void ALobbyPlayerController::Client_SetViewTargetSpot_Implementation()
@@ -142,17 +143,25 @@ ACharacterBase* ALobbyPlayerController::GetCurrentCharacter()
 	return this->CurrentCharacter;
 }
 
+void ALobbyPlayerController::SetSubclassHeroeSelected(TSubclassOf<ACharacterBase> InSubclassHeroeSelected)
+{
+	this->SubclassHeroeSelected = InSubclassHeroeSelected;
+}
+
+TSubclassOf<ACharacterBase> ALobbyPlayerController::GetSubclassHeroeSelected()
+{
+	return this->SubclassHeroeSelected;
+}
+
 void ALobbyPlayerController::SetLobbyHeroeSpot(const FLobbyHeroeSpot& InLobbyHeroeSpot)
 {
 	this->LobbyHeroeSpot = InLobbyHeroeSpot;
 }
 
-
 void ALobbyPlayerController::SetPlayerIndex(int32 InIndex)
 {
 	this->PlayerSettings.PlayerIndex = InIndex;
 }
-
 
 FLobbyHeroeSpot ALobbyPlayerController::GetLobbyHeroeSpot()
 {

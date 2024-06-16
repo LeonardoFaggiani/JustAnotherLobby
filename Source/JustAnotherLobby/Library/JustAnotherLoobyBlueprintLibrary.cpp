@@ -3,7 +3,10 @@
 
 #include "JustAnotherLoobyBlueprintLibrary.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
+
 #include "JustAnotherLobbyLoadingScreen/Public/JustAnotherLobbyLoadingScreenModule.h"
+
 
 UJustAnotherLoobyBlueprintLibrary::UJustAnotherLoobyBlueprintLibrary(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -11,18 +14,16 @@ UJustAnotherLoobyBlueprintLibrary::UJustAnotherLoobyBlueprintLibrary(const FObje
 
 void UJustAnotherLoobyBlueprintLibrary::ShowLoadingScreen(const UObject* WorldContextObject, bool bPlayUntilStopped, float PlayTime)
 {
-    UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance  = GetJustAnotherLobbyGameInstance(WorldContextObject);
+    IJustAnotherLobbyLoadingScreenModule& LoadingScreenModule = IJustAnotherLobbyLoadingScreenModule::Get();
 
-    if (IsValid(JustAnotherLobbyGameInstance))
-        JustAnotherLobbyGameInstance->ShowLoadingScreen(bPlayUntilStopped, PlayTime);
+    LoadingScreenModule.ShowLoadingScreen(bPlayUntilStopped, PlayTime);
 }
 
 void UJustAnotherLoobyBlueprintLibrary::HideLoadingScreen(const UObject* WorldContextObject)
 {
-    UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance = GetJustAnotherLobbyGameInstance(WorldContextObject);
+    IJustAnotherLobbyLoadingScreenModule& LoadingScreenModule = IJustAnotherLobbyLoadingScreenModule::Get();
 
-    if (IsValid(JustAnotherLobbyGameInstance))
-        JustAnotherLobbyGameInstance->HideLoadingScreen();
+    LoadingScreenModule.HideLoadingScreen();
 }
 
 UJustAnotherLobbyGameInstance* UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(const UObject* WorldContextObject)
@@ -73,4 +74,31 @@ UUserWidget* UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(UObject* Wor
     PlayerController->bShowMouseCursor = bShowMouseCursor;
 
     return Widget;
+}
+
+bool UJustAnotherLoobyBlueprintLibrary::IsServer(UObject* WorldContextObject)
+{
+    UWorld* World = WorldContextObject->GetWorld();
+
+    return World->IsServer();
+}
+
+ALobbyGameMode* UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(const UObject* WorldContextObject)
+{
+    ALobbyGameMode* LobbyGameMode = nullptr;
+
+    if (!WorldContextObject)
+        return nullptr;
+
+    UWorld* World = WorldContextObject->GetWorld();
+
+    if (!World)
+        return nullptr;
+
+    AGameModeBase* GameMode = UGameplayStatics::GetGameMode(World);
+
+    if(IsValid(GameMode))
+        LobbyGameMode = Cast<ALobbyGameMode>(GameMode);
+
+    return LobbyGameMode;
 }
