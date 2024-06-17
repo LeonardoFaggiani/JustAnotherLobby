@@ -66,9 +66,6 @@ protected:
 	TObjectPtr<UPlayerKickList> PlayerKickList;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* CurrentPlayersFormat;
-
-	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ServerName;
 
 	UPROPERTY(Replicated, meta = (BindWidget))

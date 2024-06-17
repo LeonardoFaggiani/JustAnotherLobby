@@ -268,7 +268,6 @@ void ULobby::NotifyMapChaged() {
 #pragma endregion Map
 
 void ULobby::SetCurrentPlayersFormat(FString InCurrentPlayersFormat) {
-    this->CurrentPlayersFormat->SetText(FText::FromString(InCurrentPlayersFormat));
     this->PlayerCountButton->SetText(FText::FromString(InCurrentPlayersFormat));
 }
 
