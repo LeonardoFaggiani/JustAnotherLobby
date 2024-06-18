@@ -8,10 +8,12 @@
 #include "Components/Image.h"
 #include "Components/Button.h"
 #include "Components/Overlay.h"
+#include "Components/OverlaySlot.h"
 #include "../Common/ButtonBase.h"
 #include "../Common/UserWidgetBase.h"
 #include "HeroeSelection.h"
 #include "PlayerKickList.h"
+#include "Chat/ChatWindow.h"
 #include "../../JustAnotherLobbyGameInstance.h"
 #include "../Struct/ConfigurationMaps.h"
 #include "../Struct/LobbyPlayerInfo.h"
@@ -31,7 +33,10 @@ class JUSTANOTHERLOBBY_API ULobby : public UUserWidgetBase
 public:
 
 	UPROPERTY(meta = (BindWidget))
-	class UOverlay* CharacterSelectionContainer;
+	class UOverlay* ChatWindowBox;
+
+	UPROPERTY(EditAnyWhere)
+	TSubclassOf<UChatWindow> ChatWindowClass;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UButtonBase> ReadyButton;
@@ -54,6 +59,9 @@ public:
 	void ShowOrHideButton();
 	void SetEnablePlayButton(bool bEnabled);
 	void SetHiddenHeroesButton(bool bHidden);
+	void SetFocusOnChatWindow();
+	void InitializeChatWindow();
+	void UpdateWindowChat(const FText& InPlayerName, const FText& InMessage);
 
 protected:
 
@@ -85,7 +93,7 @@ protected:
 	UFUNCTION() void OnPreviousMapButtonClicked();
 	UFUNCTION() void OnNextMapButtonClicked();
 	UFUNCTION() void OnHeroesButtonClicked();
-	UFUNCTION() void OnPlayerCountButtonClicked();
+	UFUNCTION() void OnPlayerCountButtonClicked();	
 
 private:
 	void InitializeMap();
@@ -99,5 +107,6 @@ private:
 	UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance;
 	class ALobbyGameMode* LobbyGameMode;
 	UTexture2D* CurrentTextureMap;
+	UChatWindow* ChatWindow;
 
 };

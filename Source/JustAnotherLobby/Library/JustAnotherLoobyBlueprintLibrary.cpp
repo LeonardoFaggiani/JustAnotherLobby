@@ -44,7 +44,7 @@ UJustAnotherLobbyGameInstance* UJustAnotherLoobyBlueprintLibrary::GetJustAnother
     return JustAnotherLobbyGameInstance;
 }
 
-UUserWidget* UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool bShowMouseCursor)
+UUserWidget* UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool bShowMouseCursor, bool bOnlyCreate)
 {
     if (!WorldContextObject || !WidgetClass)
         return nullptr;    
@@ -66,12 +66,15 @@ UUserWidget* UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(UObject* Wor
 
     Widget->AddToViewport();
 
-    FInputModeUIOnly InputModeData;
-    InputModeData.SetWidgetToFocus(Widget->TakeWidget());
-    InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    if (!bOnlyCreate)
+    {
+        FInputModeUIOnly InputModeData;
+        InputModeData.SetWidgetToFocus(Widget->TakeWidget());
+        InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
-    PlayerController->SetInputMode(InputModeData);
-    PlayerController->bShowMouseCursor = bShowMouseCursor;
+        PlayerController->SetInputMode(InputModeData);
+        PlayerController->bShowMouseCursor = bShowMouseCursor;
+    }
 
     return Widget;
 }

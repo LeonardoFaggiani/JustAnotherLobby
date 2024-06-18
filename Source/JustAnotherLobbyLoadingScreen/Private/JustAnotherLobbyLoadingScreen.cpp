@@ -17,8 +17,6 @@ void SJustAnotherLobbyLoadingScreen::Construct(const FArguments& InArgs)
 	if (!InArgs._Image)
 		return; //No Texture Loaded
 
-	InArgs._Image->UpdateResource();
-
 	FSlateImageBrush* ImageBrush = new FSlateImageBrush(InArgs._Image, ViewportSize);
 
 	ChildSlot

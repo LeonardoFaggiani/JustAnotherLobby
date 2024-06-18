@@ -4,10 +4,15 @@
 #include "LobbyPlayerController.h"
 #include "LobbyGameMode.h"
 #include "Kismet/GameplayStatics.h"
-#include "./UI/Lobby/OverheadPlayerSpot.h"
-#include "Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "Components/Widget.h"
 #include "Common/FLogJustAnotherLobby.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputTriggers.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "./UI/Lobby/OverheadPlayerSpot.h"
+#include "Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 ALobbyPlayerController::ALobbyPlayerController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -23,6 +28,33 @@ ALobbyPlayerController::ALobbyPlayerController(const FObjectInitializer& ObjectI
 
 		this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 	}
+}
+
+void ALobbyPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+		
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(this->GetLocalPlayer()))	
+		Subsystem->AddMappingContext(this->CommonPlayerControllerMappingContext, 0);	
+
+	FInputModeGameAndUI FInputModeGameAndUI;
+
+	this->SetInputMode(FInputModeGameAndUI);
+}
+
+void ALobbyPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent)) {
+		EnhancedInputComponent->BindAction(this->ChatWindowAction, ETriggerEvent::Triggered, this, &ThisClass::SetFocusOnChatWindow);
+	}
+}
+
+void ALobbyPlayerController::SetFocusOnChatWindow(const FInputActionValue& Value)
+{
+	if (this->WasInputKeyJustPressed(EKeys::Enter) && IsValid(this->Lobby))
+		this->Lobby->SetFocusOnChatWindow();	
 }
 
 #pragma region Server
@@ -51,6 +83,12 @@ void ALobbyPlayerController::Server_FillContainerPlayerKickList_Implementation()
 		this->LobbyGameMode->Server_FillContainerPlayerKickList();	
 }
 
+void ALobbyPlayerController::Server_SubmitChat_Implementation(const FText& InPlayerName, const FText& InMessage)
+{
+	for (ALobbyPlayerController* LobbyPlayerController : this->LobbyGameMode->AllPlayerControllers)	
+		LobbyPlayerController->Client_UpdateChat(InPlayerName, InMessage);
+}
+
 #pragma endregion Server
 
 #pragma region Client
@@ -60,8 +98,9 @@ void ALobbyPlayerController::Client_SetupLobbyMenu_Implementation(const FString&
 	if (!ensure(this->LobbyClass != nullptr)) return;
 
 	this->Lobby = CreateWidget<ULobby>(this, this->LobbyClass);
+	this->Lobby->InitializeChatWindow();
 	this->Lobby->SetServerName(ServerName);
-	this->Lobby->Setup();
+	this->Lobby->Setup();	
 }
 
 void ALobbyPlayerController::Client_UpdateLobbySettings_Implementation(UTexture2D* MapImage, const FString& MapName)
@@ -116,6 +155,12 @@ void ALobbyPlayerController::Client_SwitchToLobbyMode_Implementation()
 	this->Lobby->SetHiddenHeroesButton(false);
 
 	this->Lobby->ReadyButton->SetIsEnabled(true);
+}
+
+void ALobbyPlayerController::Client_UpdateChat_Implementation(const FText& InPlayerName, const FText& InMessage)
+{
+	if (IsValid(this->Lobby->ChatWindowClass))
+		this->Lobby->UpdateWindowChat(InPlayerName, InMessage);
 }
 
 void ALobbyPlayerController::Client_FillContainerPlayerKickList_Implementation(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex)

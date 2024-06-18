@@ -34,7 +34,7 @@ public:
 	static ALobbyGameMode* GetLobbyGameMode(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintCallable, Category = "UI", meta = (WorldContext = "WorldContextObject"))
-	static UUserWidget* CreateAndShowWidget(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool bShowMouseCursor);
+	static UUserWidget* CreateAndShowWidget(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool bShowMouseCursor, bool bOnlyCreate);
 
 	UFUNCTION(BlueprintCallable, Category = "Common", meta = (WorldContext = "WorldContextObject"))
 	static bool IsServer(UObject* WorldContextObject);

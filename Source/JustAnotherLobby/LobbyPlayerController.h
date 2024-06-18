@@ -34,6 +34,12 @@ public:
 	FLobbyHeroeSpot GetLobbyHeroeSpot();
 	void SetPlayerIndex(int32 InIndex);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputMappingContext* CommonPlayerControllerMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ChatWindowAction;
+
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<ULobby> LobbyClass;
 
@@ -54,6 +60,10 @@ public:
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void Server_FillContainerPlayerKickList();
 	void Server_FillContainerPlayerKickList_Implementation();
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_SubmitChat(const FText& InPlayerName, const FText& InMessage);
+	void Server_SubmitChat_Implementation(const FText& InPlayerName, const FText& InMessage);
 
 	UFUNCTION(BlueprintCallable, Client, Reliable)
 	void Client_SetupLobbyMenu(const FString& ServerName);
@@ -84,6 +94,10 @@ public:
 	void Client_SwitchToLobbyMode_Implementation();
 
 	UFUNCTION(BlueprintCallable, Client, Reliable)
+	void Client_UpdateChat(const FText& InPlayerName, const FText& InMessage);
+	void Client_UpdateChat_Implementation(const FText& InPlayerName, const FText& InMessage);
+
+	UFUNCTION(BlueprintCallable, Client, Reliable)
 	void Client_FillContainerPlayerKickList(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
 	void Client_FillContainerPlayerKickList_Implementation(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
 
@@ -92,6 +106,9 @@ public:
 	void Multi_UpdateReadyStatusInPlayerKickList_Implementation(const TArray<FPlayerKickNameIndex>& InPlayerNamesIndex);
 
 private:
+	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
+	void SetFocusOnChatWindow(const FInputActionValue& Value);
 	class ULobby* Lobby;
 	class UHeroeSelection* HeroeSelection;
 	class ALobbyGameMode* LobbyGameMode;

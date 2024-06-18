@@ -87,10 +87,12 @@ void ALobbyGameMode::Server_SwapCharacter_Implementation(APlayerController* Play
 
         ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(PlayerController);
 
+		this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
+
         LobbyPlayerController->SetCurrentCharacter(InHeroeSelected.GetDefaultObject());
         LobbyPlayerController->SetSubclassHeroeSelected(InHeroeSelected);
 
-        this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
+        this->SpawnCharacterOnPlayerSpot(LobbyPlayerController);
     }
 }
 
@@ -154,9 +156,8 @@ void ALobbyGameMode::Server_FillContainerPlayerKickList_Implementation()
     {
 		TArray<FPlayerKickNameIndex> PlayerNamesIndex = GetPlayerKickNameIndex();      
 
-		for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers) {
-			PlayerController->Client_FillContainerPlayerKickList(PlayerNamesIndex);
-		}			   
+		for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers)
+			PlayerController->Client_FillContainerPlayerKickList(PlayerNamesIndex);					   
     }
 }
 
@@ -205,13 +206,11 @@ void ALobbyGameMode::DestroyCharacterSelectedIfExits(ALobbyPlayerController* Lob
 
 	if (IsValid(CharacterBase))
 		CharacterBase->Destroy();
-
-	this->SpawnCharacterOnPlayerSpot(LobbyPlayerController);
 }
 
 void ALobbyGameMode::Server_RespawnPlayer_Implementation(ALobbyPlayerController* LobbyPlayerController)
 {
-	this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
+	this->SpawnCharacterOnPlayerSpot(LobbyPlayerController);
 }
 
 void ALobbyGameMode::Server_ShouldHideLoadingScreen_Implementation(ALobbyPlayerController* LobbyPlayerController)
@@ -220,7 +219,6 @@ void ALobbyGameMode::Server_ShouldHideLoadingScreen_Implementation(ALobbyPlayerC
         UJustAnotherLoobyBlueprintLibrary::HideLoadingScreen(this);
     }
 }
-
 
 void ALobbyGameMode::UpdatePlayerName(ALobbyPlayerController* LobbyPlayerController)
 {

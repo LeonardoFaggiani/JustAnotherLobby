@@ -7,6 +7,7 @@
 #include "../../LobbyGameMode.h"
 #include "../../LobbyPlayerController.h"
 #include "../../Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "Chat/ChatWindow.h"
 #include "Kismet/GameplayStatics.h"
 
 bool ULobby::Initialize()
@@ -22,7 +23,6 @@ bool ULobby::Initialize()
         this->LobbyGameMode = lobbyGameMode;
         this->InitializeMap();
     }
-
 
     if (this->ReadyUpButton && this->ReadyButton && this->PreviousMap && this->NextMap && this->HeroesButton && this->PlayerCountButton) {
 
@@ -150,6 +150,37 @@ void ULobby::OnNextMapButtonClicked()
 
 #pragma region
 
+void ULobby::SetFocusOnChatWindow()
+{
+    if (IsValid(this->ChatWindow))
+        this->ChatWindow->FocusOnChatInput();
+}
+
+void ULobby::InitializeChatWindow()
+{
+    UUserWidget* ChatWindowUserWidget = UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(this, this->ChatWindowClass, false, true);
+
+    if (UChatWindow* ChatWindowChecked = CastChecked<UChatWindow>(ChatWindowUserWidget)) {
+
+        this->ChatWindow = ChatWindowChecked;
+
+        UOverlaySlot* OverlaySlot = this->ChatWindowBox->AddChildToOverlay(this->ChatWindow);
+
+        OverlaySlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+        OverlaySlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+    }
+}
+
+void ULobby::UpdateWindowChat(const FText& InPlayerName, const FText& InMessage)
+{
+    if (IsValid(this->ChatWindow))    
+        this->ChatWindow->UpdateChat(InPlayerName, InMessage);    
+}
+
+#pragma endregion ChatWindow
+
+#pragma region
+
 void ULobby::InitializeMap()
 {
     FConfigurationMaps FConfigurationMaps = GetFirstOrLastMap(true);
@@ -265,12 +296,6 @@ void ULobby::NotifyMapChaged() {
         this->LobbyGameMode->Server_UpdateGameSettings(this->CurrentTextureMap, this->MapName->GetText().ToString());
 }
 
-#pragma endregion Map
-
-void ULobby::SetCurrentPlayersFormat(FString InCurrentPlayersFormat) {
-    this->PlayerCountButton->SetText(FText::FromString(InCurrentPlayersFormat));
-}
-
 void ULobby::SetMap(UTexture2D* mapImage, FString mapName) {
 
     this->MapImage->SetVisibility(ESlateVisibility::Visible);
@@ -280,6 +305,13 @@ void ULobby::SetMap(UTexture2D* mapImage, FString mapName) {
 
     this->CurrentTextureMap = mapImage;
 }
+
+#pragma endregion Map
+
+void ULobby::SetCurrentPlayersFormat(FString InCurrentPlayersFormat) {
+    this->PlayerCountButton->SetText(FText::FromString(InCurrentPlayersFormat));
+}
+
 
 void ULobby::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
