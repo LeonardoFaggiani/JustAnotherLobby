@@ -105,3 +105,27 @@ ALobbyGameMode* UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(const UObjec
 
     return LobbyGameMode;
 }
+
+AActor* UJustAnotherLoobyBlueprintLibrary::GetActorByName(const UObject* WorldContextObject, FString InActorName) {
+
+    if (!WorldContextObject)
+        return nullptr;
+
+    TArray<AActor*> ActorsInScene{};
+
+    UGameplayStatics::GetAllActorsOfClass(WorldContextObject->GetWorld(), AActor::StaticClass(), ActorsInScene);
+
+    if (ActorsInScene.Num() > 0)
+    {
+        for (AActor* actor : ActorsInScene)
+        {
+            if (actor == nullptr)
+                return nullptr;
+
+            if (actor->GetActorNameOrLabel() == InActorName)
+                return actor;
+        }
+    }
+
+    return nullptr;
+}

@@ -114,7 +114,6 @@ private:
 	class ALobbyGameMode* LobbyGameMode;
 	class UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance;
 	AActor* ViewTarget;
-	AActor* GetActorByName(FString InActorName);	
 	ACharacterBase* CurrentCharacter;
 	TSubclassOf<ACharacterBase> SubclassHeroeSelected;
 };

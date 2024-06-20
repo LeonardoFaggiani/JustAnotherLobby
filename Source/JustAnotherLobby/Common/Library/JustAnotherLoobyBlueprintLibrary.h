@@ -38,4 +38,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Common", meta = (WorldContext = "WorldContextObject"))
 	static bool IsServer(UObject* WorldContextObject);
+
+	/* Return the first actor by Name if the actor doesnt exists return nullptr */
+	UFUNCTION(BlueprintCallable, Category = "Common", meta = (WorldContext = "WorldContextObject"))
+	static AActor* GetActorByName(const UObject* WorldContextObject, FString InActorName);
 };

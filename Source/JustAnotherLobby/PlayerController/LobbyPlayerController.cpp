@@ -133,7 +133,7 @@ void ALobbyPlayerController::Client_ShowLoadingScreen_Implementation()
 
 void ALobbyPlayerController::Client_SetViewTargetSpot_Implementation()
 {
-	this->ViewTarget = GetActorByName("ViewTargetSpot");
+	this->ViewTarget = UJustAnotherLoobyBlueprintLibrary::GetActorByName(this, "ViewTargetSpot");
 
 	this->SetViewTargetWithBlend(this->ViewTarget);
 }
@@ -202,28 +202,6 @@ FLobbyHeroeSpot ALobbyPlayerController::GetLobbyHeroeSpot()
 {
 	return this->LobbyHeroeSpot;
 }
-
-AActor* ALobbyPlayerController::GetActorByName(FString InActorName)
-{
-	TArray<AActor*> ActorsInScene{};
-
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), ActorsInScene);
-
-	if (ActorsInScene.Num() > 0)
-	{
-		for (AActor* actor : ActorsInScene)
-		{
-			if (actor == nullptr)
-				return nullptr;
-
-			if (actor->GetActorNameOrLabel() == InActorName)
-				return actor;
-		}
-	}
-
-	return nullptr;
-}
-
 
 void ALobbyPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
