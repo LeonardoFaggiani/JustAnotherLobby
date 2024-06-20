@@ -4,9 +4,9 @@
 #include "Lobby.h"
 
 #include "Net/UnrealNetwork.h"
-#include "../../LobbyGameMode.h"
-#include "../../LobbyPlayerController.h"
-#include "../../Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../GameModes/LobbyGameMode.h"
+#include "../../PlayerController/LobbyPlayerController.h"
+#include "../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "Chat/ChatWindow.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,13 +16,9 @@ bool ULobby::Initialize()
         return false;
 
     this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
-
-    ALobbyGameMode* lobbyGameMode = UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(this);
-
-    if (IsValid(lobbyGameMode)) {
-        this->LobbyGameMode = lobbyGameMode;
-        this->InitializeMap();
-    }
+    this->LobbyGameMode = UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(this);
+    
+    this->InitializeMap();    
 
     if (this->ReadyUpButton && this->ReadyButton && this->PreviousMap && this->NextMap && this->HeroesButton && this->PlayerCountButton) {
 

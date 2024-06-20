@@ -3,8 +3,8 @@
 
 #include "ChatWindow.h"
 
-#include "../../JustAnotherLobby/Library/JustAnotherLoobyBlueprintLibrary.h"
-#include "JustAnotherLobby/JustAnotherLobbyPlayerState.h"
+#include "../../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../../PlayerState/JustAnotherLobbyPlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
 bool UChatWindow::Initialize()

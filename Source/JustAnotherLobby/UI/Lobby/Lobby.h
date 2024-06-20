@@ -11,13 +11,13 @@
 #include "Components/OverlaySlot.h"
 #include "../Common/ButtonBase.h"
 #include "../Common/UserWidgetBase.h"
-#include "HeroeSelection.h"
-#include "PlayerKickList.h"
+#include "HeroeCard/HeroeSelection.h"
+#include "PlayerKick/PlayerKickList.h"
 #include "Chat/ChatWindow.h"
 #include "../../JustAnotherLobbyGameInstance.h"
-#include "../Struct/ConfigurationMaps.h"
-#include "../Struct/LobbyPlayerInfo.h"
-#include "../Struct/PlayerKickNameIndex.h"
+#include "../../Common/Struct/ConfigurationMaps.h"
+#include "../../Common/Struct/LobbyPlayerInfo.h"
+#include "../../Common/Struct/PlayerKickNameIndex.h"
 
 #include "Lobby.generated.h"
 

@@ -3,7 +3,7 @@
 
 #include "MainMenu.h"
 #include "../../JustAnotherLobbyGameInstance.h"
-#include "../../Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
 #include <Kismet/GameplayStatics.h>
 
 bool UMainMenu::Initialize()

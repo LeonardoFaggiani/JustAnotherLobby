@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 #include "../JustAnotherLobbyGameInstance.h"
-#include "../InGamePlayerController.h"
+#include "../PlayerController/InGamePlayerController.h"
 #include "GameFramework/PlayerStart.h"
 #include "InGameGameMode.generated.h"
 

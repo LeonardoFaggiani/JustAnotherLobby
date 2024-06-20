@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "UI/MainMenu/MainMenu.h"
-#include "./UI/Struct/Heroes.h"
-#include "./UI/Struct/ConfigurationMaps.h"
-#include "./UI/Struct/LobbyHeroeSpot.h"
+#include "./Common/Struct/Heroes.h"
+#include "./Common/Struct/ConfigurationMaps.h"
+#include "./Common/Struct/LobbyHeroeSpot.h"
 #include <MoviePlayer/Public/MoviePlayer.h>
-#include "UI/Struct/InGamePlayerInfo.h"
+#include "Common/Struct/InGamePlayerInfo.h"
 
 #include "JustAnotherLobbyGameInstance.generated.h"
 

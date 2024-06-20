@@ -4,7 +4,7 @@
 #include "Options.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "../../../Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
 #include <Kismet/GameplayStatics.h>
 
 bool UOptions::Initialize()

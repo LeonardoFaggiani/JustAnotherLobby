@@ -3,22 +3,14 @@
 
 #include "InGameGameMode.h"
 #include "Net/UnrealNetwork.h"
-#include "../JustAnotherLobbyPlayerState.h"
+#include "../PlayerState/JustAnotherLobbyPlayerState.h"
+#include "../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 
 AInGameGameMode::AInGameGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	UWorld* World = GetWorld();
-
-	if (IsValid(World))
-	{
-		UGameInstance* GameInstance = World->GetGameInstance();
-
-		if (IsValid(GameInstance)) {
-			this->JustAnotherLobbyGameInstance = Cast<UJustAnotherLobbyGameInstance>(GameInstance);
-		}
-	}
+	this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 }
 
 void AInGameGameMode::PostLogin(APlayerController* NewPlayer)
