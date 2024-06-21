@@ -18,7 +18,8 @@ bool ULobby::Initialize()
     this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
     this->LobbyGameMode = UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(this);
     
-    this->InitializeMap();    
+    if (IsValid(this->LobbyGameMode))    
+        this->InitializeMap();    
 
     if (this->ReadyUpButton && this->ReadyButton && this->PreviousMap && this->NextMap && this->HeroesButton && this->PlayerCountButton) {
 
