@@ -14,11 +14,11 @@ If you want to have a better experience, run the game in standalone so that the 
 - Host Games
 - Find Games
 - Options Settings
-- Heroe Selection Spot (Max 4 Players)
+- Hero Selection Spot (Max 4 Players)
 - Ready Player Status
 - Kick Player from Lobby
 - Chat System
-- Loading Screen (MoviePlayer it's only work in standalone mode)
+- Loading Screen (MoviePlayer it only works in standalone mode)
 
  ![image](https://leofstorage.blob.core.windows.net/my-personal-storage/UnrealGameLobby.JPG)
 
