@@ -60,10 +60,6 @@
 		{
 			"Name": "ModelingToolsEditorMode",
 			"Enabled": true
-		},
-		{
-			"Name": "ALSV4_CPP",
-			"Enabled": false
 		}
 	]
 }
