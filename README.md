@@ -20,7 +20,7 @@ If you want to have a better experience, run the game in standalone so that the 
 - Chat System
 - Loading Screen (MoviePlayer it only works in standalone mode)
 
- ![image](https://leofstorage.blob.core.windows.net/my-personal-storage/UnrealGameLobby.JPG)
+ ![image](UnrealGameLobby.JPG)
 
 Download [Demo](https://multiplayergame.blob.core.windows.net/justanotherlobby/JustAnotherLobby.rar).
 
