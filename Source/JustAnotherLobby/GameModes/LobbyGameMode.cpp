@@ -64,10 +64,10 @@ void ALobbyGameMode::Logout(AController* Exiting) {
 	ALobbyPlayerController* LobbyPlayerController = Cast<ALobbyPlayerController>(Exiting);
 
 	if (LobbyPlayerController)
-		this->AllPlayerControllers.Remove(LobbyPlayerController);
-
+		Server_RemoveCharacterFromLobby(LobbyPlayerController);	
+	
 	Server_EveryoneUpdate();
-	Server_FillContainerPlayerKickList();
+	Server_FillContainerPlayerKickList();	
 }
 
 bool ALobbyGameMode::IsAllPlayerReady()
@@ -159,6 +159,13 @@ void ALobbyGameMode::Server_FillContainerPlayerKickList_Implementation()
 		for (ALobbyPlayerController* PlayerController : this->AllPlayerControllers)
 			PlayerController->Client_FillContainerPlayerKickList(PlayerNamesIndex);					   
     }
+}
+
+void ALobbyGameMode::Server_RemoveCharacterFromLobby_Implementation(ALobbyPlayerController* LobbyPlayerController)
+{
+	this->DestroyCharacterSelectedIfExits(LobbyPlayerController);
+
+	this->AllPlayerControllers.Remove(LobbyPlayerController);
 }
 
 void ALobbyGameMode::Server_LaunchTheGame_Implementation()

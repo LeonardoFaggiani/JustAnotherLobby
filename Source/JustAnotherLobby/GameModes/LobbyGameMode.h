@@ -49,6 +49,10 @@ public:
 	void Server_SpawnLobbyPlayerSpot_Implementation(ALobbyPlayerController* LobbyPlayerController);
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_RemoveCharacterFromLobby(ALobbyPlayerController* LobbyPlayerController);
+	void Server_RemoveCharacterFromLobby_Implementation(ALobbyPlayerController* LobbyPlayerController);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void Server_UpdatePlayerName();
 	void Server_UpdatePlayerName_Implementation();
 
