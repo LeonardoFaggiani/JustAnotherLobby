@@ -1,4 +1,4 @@
-# Just Another Lobby
+﻿# Just Another Lobby
 
 This is a proof of concept in which a multiplayer game for up to four players was created to apply both basic and advanced concepts handled by Unreal Engine.
 
@@ -6,6 +6,8 @@ The project is developed in C++ and Blueprints in Unreal Engine version 5.1. Add
 
 If you want to have a better experience, run the game in standalone so that the loading screen works correctly.
 
+## Give a Star! ⭐
+If you liked the project or if JustAnotherLobby helped you, please give a star ;)
 
 ## Features
 
