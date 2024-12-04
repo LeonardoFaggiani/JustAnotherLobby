@@ -3,7 +3,7 @@
 
 #include "HeroeSelection.h"
 #include "Components/HorizontalBoxSlot.h"
-#include "../../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include "../../../PlayerController/LobbyPlayerController.h"
 
 bool UHeroeSelection::Initialize() {
@@ -11,7 +11,7 @@ bool UHeroeSelection::Initialize() {
     if (!Super::Initialize())
         return false;
 
-    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
+    this->JustAnotherLobbyGameInstance = UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
     if (BackButton)
         BackButton->OnClicked().AddUObject(this, &UHeroeSelection::OnBackButtonClicked);

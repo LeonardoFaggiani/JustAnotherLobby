@@ -4,14 +4,14 @@
 #include "LobbyGameMode.h"
 #include "../PlayerState/JustAnotherLobbyPlayerState.h"
 #include "Net/UnrealNetwork.h"
-#include "../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include "../Common/Struct/PlayerKickNameIndex.h"
 #include "../Common/Struct/InGamePlayerInfo.h"
 
 ALobbyGameMode::ALobbyGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	PlayerControllerClass = ALobbyPlayerController::StaticClass();
-	this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
+	this->JustAnotherLobbyGameInstance = UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 }
 
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer) {
@@ -223,7 +223,7 @@ void ALobbyGameMode::Server_RespawnPlayer_Implementation(ALobbyPlayerController*
 void ALobbyGameMode::Server_ShouldHideLoadingScreen_Implementation(ALobbyPlayerController* LobbyPlayerController)
 {
     if (this->AllPlayerControllers.Contains(LobbyPlayerController)) {
-        UJustAnotherLoobyBlueprintLibrary::HideLoadingScreen(this);
+        UJustAnotherLobbyBlueprintLibrary::HideLoadingScreen(this);
     }
 }
 

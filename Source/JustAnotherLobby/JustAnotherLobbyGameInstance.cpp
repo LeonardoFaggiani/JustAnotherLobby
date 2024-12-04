@@ -7,7 +7,8 @@
 #include "JustAnotherLobbyLoadingScreen.h"
 #include "Net/UnrealNetwork.h"
 #include "MoviePlayer.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
+
 
 UJustAnotherLobbyGameInstance::UJustAnotherLobbyGameInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

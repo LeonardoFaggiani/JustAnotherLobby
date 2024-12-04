@@ -3,7 +3,7 @@
 
 #include "ChatWindow.h"
 
-#include "../../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include "../../../PlayerState/JustAnotherLobbyPlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -32,7 +32,7 @@ void UChatWindow::PlayOnTextCommitted(const FText& NewText, ETextCommit::Type Te
 
 void UChatWindow::UpdateChat(const FText& InPlayerName, const FText& InMessage)
 {
-    UUserWidget* ChatUserWidget = UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(this, this->ChatMessage, false, true);
+    UUserWidget* ChatUserWidget = UJustAnotherLobbyBlueprintLibrary::CreateAndShowWidget(this, this->ChatMessage, false, true);
 
     if (UChatMessage* ChatMessageChecked = CastChecked<UChatMessage>(ChatUserWidget)) {
 

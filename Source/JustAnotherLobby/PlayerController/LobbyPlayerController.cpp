@@ -11,13 +11,13 @@
 #include "InputMappingContext.h"
 #include "InputAction.h"
 #include "../UI/Lobby/OverheadPlayerSpot.h"
-#include "../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 ALobbyPlayerController::ALobbyPlayerController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	this->LobbyGameMode = UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(this);
-	this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);	
+	this->LobbyGameMode = UJustAnotherLobbyBlueprintLibrary::GetLobbyGameMode(this);
+	this->JustAnotherLobbyGameInstance = UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);	
 }
 
 void ALobbyPlayerController::BeginPlay()
@@ -128,12 +128,12 @@ void ALobbyPlayerController::Client_AssignHeroeToPlayer_Implementation(TSubclass
 
 void ALobbyPlayerController::Client_ShowLoadingScreen_Implementation()
 {
-	UJustAnotherLoobyBlueprintLibrary::ShowLoadingScreen(this, true, 3);
+	UJustAnotherLobbyBlueprintLibrary::ShowLoadingScreen(this, true, 3);
 }
 
 void ALobbyPlayerController::Client_SetViewTargetSpot_Implementation()
 {
-	this->ViewTarget = UJustAnotherLoobyBlueprintLibrary::GetActorByName(this, "ViewTargetSpot");
+	this->ViewTarget = UJustAnotherLobbyBlueprintLibrary::GetActorByName(this, "ViewTargetSpot");
 
 	this->SetViewTargetWithBlend(this->ViewTarget);
 }

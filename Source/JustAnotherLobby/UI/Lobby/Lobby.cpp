@@ -6,7 +6,7 @@
 #include "Net/UnrealNetwork.h"
 #include "../../GameModes/LobbyGameMode.h"
 #include "../../PlayerController/LobbyPlayerController.h"
-#include "../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include "Chat/ChatWindow.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -15,8 +15,8 @@ bool ULobby::Initialize()
     if (!Super::Initialize())
         return false;
 
-    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
-    this->LobbyGameMode = UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(this);
+    this->JustAnotherLobbyGameInstance = UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
+    this->LobbyGameMode = UJustAnotherLobbyBlueprintLibrary::GetLobbyGameMode(this);
     
     if (IsValid(this->LobbyGameMode))    
         this->InitializeMap();    
@@ -45,7 +45,7 @@ void ULobby::ShowOrHideButton() {
 
     if (this->ReadyButton && this->PreviousMap && this->NextMap) {
 
-        if (!UJustAnotherLoobyBlueprintLibrary::IsServer(this)) {
+        if (!UJustAnotherLobbyBlueprintLibrary::IsServer(this)) {
             this->ReadyUpButton->SetVisibility(ESlateVisibility::Hidden);
             this->ReadyButton->SetVisibility(ESlateVisibility::Visible);
 
@@ -155,7 +155,7 @@ void ULobby::SetFocusOnChatWindow()
 
 void ULobby::InitializeChatWindow()
 {
-    UUserWidget* ChatWindowUserWidget = UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(this, this->ChatWindowClass, false, true);
+    UUserWidget* ChatWindowUserWidget = UJustAnotherLobbyBlueprintLibrary::CreateAndShowWidget(this, this->ChatWindowClass, false, true);
 
     if (UChatWindow* ChatWindowChecked = CastChecked<UChatWindow>(ChatWindowUserWidget)) {
 

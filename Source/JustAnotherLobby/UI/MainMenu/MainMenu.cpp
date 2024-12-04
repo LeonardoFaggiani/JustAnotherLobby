@@ -3,7 +3,7 @@
 
 #include "MainMenu.h"
 #include "../../JustAnotherLobbyGameInstance.h"
-#include "../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include <Kismet/GameplayStatics.h>
 
 bool UMainMenu::Initialize()
@@ -18,7 +18,7 @@ bool UMainMenu::Initialize()
         ExitButton->OnClicked().AddUObject(this, &ThisClass::OnExitButtonClicked);
     }
 
-    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
+    this->JustAnotherLobbyGameInstance = UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
     return true;
 }

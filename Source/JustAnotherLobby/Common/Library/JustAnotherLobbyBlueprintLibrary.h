@@ -7,13 +7,13 @@
 #include "../../JustAnotherLobbyGameInstance.h"
 #include "../../GameModes/LobbyGameMode.h"
 
-#include "JustAnotherLoobyBlueprintLibrary.generated.h"
+#include "JustAnotherLobbyBlueprintLibrary.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class JUSTANOTHERLOBBY_API UJustAnotherLoobyBlueprintLibrary : public UBlueprintFunctionLibrary
+class JUSTANOTHERLOBBY_API UJustAnotherLobbyBlueprintLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 

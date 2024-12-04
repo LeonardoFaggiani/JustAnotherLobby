@@ -5,7 +5,7 @@
 #include "../../../PlayerController/LobbyPlayerController.h"
 #include "Components/HorizontalBoxSlot.h"
 #include "Kismet/GameplayStatics.h"
-#include "../../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include "../../../JustAnotherLobbyGameInstance.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
@@ -29,7 +29,7 @@ void UHeroeCard::SetHeroeSelected()
         {
             this->SetIsEnabled(false);
             
-            UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
+            UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance = UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
             
             TSubclassOf<ACharacterBase> CharacterBase = JustAnotherLobbyGameInstance->GetHeroeByName(this->HeroeName->GetText().ToString());
             

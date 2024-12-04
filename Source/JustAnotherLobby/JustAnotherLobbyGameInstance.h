@@ -1,15 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "UI/MainMenu/MainMenu.h"
-#include "./Common/Struct/Heroes.h"
-#include "./Common/Struct/ConfigurationMaps.h"
-#include "./Common/Struct/LobbyHeroeSpot.h"
-#include <MoviePlayer/Public/MoviePlayer.h>
+#include "Components/AudioComponent.h"
+#include "Sound/SoundBase.h"
+#include "MoviePlayer.h"
+
+#include "Common/Struct/Heroes.h"
+#include "Common/Struct/ConfigurationMaps.h"
+#include "Common/Struct/LobbyHeroeSpot.h"
 #include "Common/Struct/InGamePlayerInfo.h"
+
+#include "Characters/CharacterBase.h"
+#include "UI/MainMenu/MainMenu.h"
 
 #include "JustAnotherLobbyGameInstance.generated.h"
 
@@ -28,7 +32,7 @@ public:
 
     /* Main Menu */
 
-    UPROPERTY(EditAnyWhere)
+    UPROPERTY(EditAnywhere)
     TSubclassOf<UMainMenu> MenuClass;
 
     UFUNCTION(BlueprintCallable)
@@ -64,19 +68,20 @@ public:
 
     UPROPERTY(Replicated)
     int32 MaxPlayers;
+
     UPROPERTY(Replicated)
     FString ServerName;
 
-    UPROPERTY(EditAnyWhere)
+    UPROPERTY(EditAnywhere)
     TArray<FHeroes> Heroes;
     TArray<FInGamePlayerInfo> InGamePlayersInfo;
-    UPROPERTY(EditAnyWhere)
+    UPROPERTY(EditAnywhere)
     UTexture2D* LoadingScreenImage;
 
-    UPROPERTY(EditAnyWhere)
+    UPROPERTY(EditAnywhere)
     TMap<FString, FConfigurationMaps> ConfigurationMaps;
 
-    UPROPERTY(EditAnyWhere)
+    UPROPERTY(EditAnywhere)
     TMap<int32, FLobbyHeroeSpot> ConfigurationLobbyHeroeSpot;
 
     UFUNCTION(BlueprintCallable)
@@ -96,6 +101,8 @@ public:
 
     UFUNCTION()
     TSubclassOf<ACharacterBase> GetHeroeByName(FString InHeroeName);
+
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
     /* End General Settings */    
 

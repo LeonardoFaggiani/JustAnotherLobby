@@ -4,7 +4,7 @@
 #include "Options.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "../../../Common/Library/JustAnotherLoobyBlueprintLibrary.h"
+#include "../../../Common/Library/JustAnotherLobbyBlueprintLibrary.h"
 #include <Kismet/GameplayStatics.h>
 
 bool UOptions::Initialize()
@@ -30,7 +30,7 @@ bool UOptions::Initialize()
         BackButton->OnClicked().AddUObject(this, &UOptions::OnBackButtonClicked);
     }
 
-    this->JustAnotherLobbyGameInstance = UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
+    this->JustAnotherLobbyGameInstance = UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(this);
 
     this->InitializeSettings();
     this->InitializeScreenResolutionSupported();

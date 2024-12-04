@@ -1,32 +1,32 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "JustAnotherLoobyBlueprintLibrary.h"
+#include "JustAnotherLobbyBlueprintLibrary.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "JustAnotherLobbyLoadingScreen/Public/JustAnotherLobbyLoadingScreenModule.h"
 
 
-UJustAnotherLoobyBlueprintLibrary::UJustAnotherLoobyBlueprintLibrary(const FObjectInitializer& ObjectInitializer)
+UJustAnotherLobbyBlueprintLibrary::UJustAnotherLobbyBlueprintLibrary(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 { }
 
-void UJustAnotherLoobyBlueprintLibrary::ShowLoadingScreen(const UObject* WorldContextObject, bool bPlayUntilStopped, float PlayTime)
+void UJustAnotherLobbyBlueprintLibrary::ShowLoadingScreen(const UObject* WorldContextObject, bool bPlayUntilStopped, float PlayTime)
 {
     IJustAnotherLobbyLoadingScreenModule& LoadingScreenModule = IJustAnotherLobbyLoadingScreenModule::Get();
 
     LoadingScreenModule.ShowLoadingScreen(bPlayUntilStopped, PlayTime);
 }
 
-void UJustAnotherLoobyBlueprintLibrary::HideLoadingScreen(const UObject* WorldContextObject)
+void UJustAnotherLobbyBlueprintLibrary::HideLoadingScreen(const UObject* WorldContextObject)
 {
     IJustAnotherLobbyLoadingScreenModule& LoadingScreenModule = IJustAnotherLobbyLoadingScreenModule::Get();
 
     LoadingScreenModule.HideLoadingScreen();
 }
 
-UJustAnotherLobbyGameInstance* UJustAnotherLoobyBlueprintLibrary::GetJustAnotherLobbyGameInstance(const UObject* WorldContextObject)
+UJustAnotherLobbyGameInstance* UJustAnotherLobbyBlueprintLibrary::GetJustAnotherLobbyGameInstance(const UObject* WorldContextObject)
 {
     UJustAnotherLobbyGameInstance* JustAnotherLobbyGameInstance = nullptr;
 
@@ -44,7 +44,7 @@ UJustAnotherLobbyGameInstance* UJustAnotherLoobyBlueprintLibrary::GetJustAnother
     return JustAnotherLobbyGameInstance;
 }
 
-UUserWidget* UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool bShowMouseCursor, bool bOnlyCreate)
+UUserWidget* UJustAnotherLobbyBlueprintLibrary::CreateAndShowWidget(UObject* WorldContextObject, TSubclassOf<UUserWidget> WidgetClass, bool bShowMouseCursor, bool bOnlyCreate)
 {
     if (!WorldContextObject || !WidgetClass)
         return nullptr;    
@@ -79,14 +79,19 @@ UUserWidget* UJustAnotherLoobyBlueprintLibrary::CreateAndShowWidget(UObject* Wor
     return Widget;
 }
 
-bool UJustAnotherLoobyBlueprintLibrary::IsServer(UObject* WorldContextObject)
+bool UJustAnotherLobbyBlueprintLibrary::IsServer(UObject* WorldContextObject)
 {
+    if (!WorldContextObject)
+    {
+        return false;
+    }
+
     UWorld* World = WorldContextObject->GetWorld();
 
-    return World->IsServer();
+    return World && World->GetNetMode() != NM_Client;
 }
 
-ALobbyGameMode* UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(const UObject* WorldContextObject)
+ALobbyGameMode* UJustAnotherLobbyBlueprintLibrary::GetLobbyGameMode(const UObject* WorldContextObject)
 {
     ALobbyGameMode* LobbyGameMode = nullptr;
 
@@ -106,7 +111,7 @@ ALobbyGameMode* UJustAnotherLoobyBlueprintLibrary::GetLobbyGameMode(const UObjec
     return LobbyGameMode;
 }
 
-AActor* UJustAnotherLoobyBlueprintLibrary::GetActorByName(const UObject* WorldContextObject, FString InActorName) {
+AActor* UJustAnotherLobbyBlueprintLibrary::GetActorByName(const UObject* WorldContextObject, FString InActorName) {
 
     if (!WorldContextObject)
         return nullptr;
